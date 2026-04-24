@@ -27,6 +27,8 @@ This project addresses these challenges by designing a **safety-first AI system*
 
 ## 🏗️ System Architecture
 
+![Architecture Diagram](assets/architecture.png)
+
 **Core Components:**
 
 * NLP Pipeline for symptom extraction (Urdu-English support)
