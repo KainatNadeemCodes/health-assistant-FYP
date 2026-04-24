@@ -28,6 +28,7 @@ This project addresses these challenges by designing a **safety-first AI system*
 ## 🏗️ System Architecture
 
 ![Architecture Diagram](assets/architecture.png)
+The system integrates NLP processing, classification, and a Human-in-the-Loop safety layer to ensure reliable decision-making in high-risk scenarios.
 
 **Core Components:**
 
@@ -35,10 +36,6 @@ This project addresses these challenges by designing a **safety-first AI system*
 * Triage Classification Model (3 severity levels)
 * Confidence Scoring Mechanism
 * Human-in-the-Loop (HITL) Safety Layer
-
-📌 *Architecture Diagram:*
-*(Insert image here — system flow diagram)*
-
 ---
 
 ## ⚙️ Technical Stack
@@ -57,6 +54,17 @@ This project addresses these challenges by designing a **safety-first AI system*
 * ✅ Implements **Human-in-the-Loop intervention** for high-risk predictions
 * ✅ Designed with **safety constraints from the initial architecture stage**
 
+---
+## 📊 Sample Predictions
+
+View real input/output examples here:  
+👉 [Sample Outputs](sample_outputs/input_output_examples.md)
+
+### Example
+
+**Input:** "Mujhe chest pain ho raha hai"  
+**Output:** High Severity (Confidence: 0.82)  
+**Action:** Human escalation required
 ---
 
 ## 🧠 Responsible AI Design
