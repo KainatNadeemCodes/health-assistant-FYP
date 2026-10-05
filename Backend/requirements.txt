@@ -1,0 +1,49 @@
+# ============================================================
+# AI-Powered Smart Health Assistant — Backend Requirements
+# Version 3.1  |  Group: F25PROJECT664B0
+# ============================================================
+
+# ── Web Server & API Layer ──────────────────────────────────
+fastapi>=0.110.0
+uvicorn>=0.27.0
+pydantic>=2.6.0
+
+# Required for file uploads — used by the /voice-input endpoint
+python-multipart>=0.0.9
+
+
+# ── Machine Learning Components ─────────────────────────────
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+
+# ── Explainability ───────────────────────────────────────────
+# SHAP LinearExplainer is used for Logistic Regression + TF-IDF predictions.
+# Satisfies SRS UC-04 / FR13 (Explainability Panel).
+shap>=0.44.0
+
+
+# ── Data Processing ─────────────────────────────────────────
+pandas>=2.1.0
+numpy>=1.26.0
+
+
+# ── Natural Language Processing ─────────────────────────────
+# Text cleaning, tokenization, and stopword removal in preprocessing.py
+nltk>=3.8.1
+
+
+# ── PDF Report Generation ───────────────────────────────────
+fpdf2>=2.7.9
+reportlab>=4.0.0
+
+
+# ── Voice Input Processing ──────────────────────────────────
+# SpeechRecognition transcribes audio files server-side via Google Speech API
+# This replaces browser-side webkitSpeechRecognition which fails on some networks
+SpeechRecognition>=3.10.0
+
+# pydub converts the WebM/OGG audio blob from the browser into WAV format
+# before passing it to SpeechRecognition
+# Requires ffmpeg installed separately on the system (see README)
+pydub>=0.25.1

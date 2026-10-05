@@ -1,0 +1,146 @@
+/**
+ * Part of the AI-Powered Smart Health Assistant UI.
+ * -------------------------------------------------------------------------
+ * The Design System and Global Stylesheet.
+ * * This file defines our project's custom "Glassmorphism" aesthetic, 
+ * color tokens for health urgency, and Chat UI bubbles. 
+ * * It also contains the crucial CSS logic for RTL support (Urdu) and 
+ * responsive typography to ensure a professional user experience.
+ * -------------------------------------------------------------------------
+ */
+ 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 7%;
+    --foreground: 210 33% 95%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 210 33% 95%;
+
+    --popover: 220 20% 12%;
+    --popover-foreground: 210 33% 95%;
+
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 20% 16%;
+    --secondary-foreground: 210 33% 90%;
+
+    --muted: 220 20% 14%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 170 65% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 91% 50% / 0.2;
+    --input: 220 20% 18%;
+    --ring: 217 91% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 210 33% 90%;
+    --sidebar-primary: 217 91% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 16%;
+    --sidebar-accent-foreground: 210 33% 90%;
+    --sidebar-border: 217 91% 50% / 0.2;
+    --sidebar-ring: 217 91% 50%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --success: 152 60% 40%;
+    --success-foreground: 0 0% 100%;
+    --info: 217 91% 50%;
+    --info-foreground: 0 0% 100%;
+
+    --glass-bg: 220 20% 12% / 0.6;
+    --glass-border: 217 91% 50% / 0.3;
+    --glow: 217 91% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Glassmorphism utilities */
+.glass-card {
+  background: hsl(var(--glass-bg));
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--glass-border));
+  border-radius: var(--radius);
+}
+
+.glass-card-glow {
+  background: hsl(var(--glass-bg));
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--glass-border));
+  border-radius: var(--radius);
+  box-shadow: 0 0 20px hsl(var(--glow) / 0.15), inset 0 0 20px hsl(var(--glow) / 0.05);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px hsl(var(--glow) / 0.5);
+}
+
+/* RTL support */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Chat message bubbles */
+.chat-bubble-ai {
+  background: hsl(var(--primary) / 0.15);
+  border: 1px solid hsl(var(--primary) / 0.2);
+  border-radius: 1rem 1rem 1rem 0.25rem;
+}
+
+.chat-bubble-user {
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--glass-border));
+  border-radius: 1rem 1rem 0.25rem 1rem;
+}
+
+[dir="rtl"] .chat-bubble-ai {
+  border-radius: 1rem 1rem 0.25rem 1rem;
+}
+
+[dir="rtl"] .chat-bubble-user {
+  border-radius: 1rem 1rem 1rem 0.25rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+}

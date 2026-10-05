@@ -1,0 +1,122 @@
+{
+  "app_name": "AI Healthcare Chatbot",
+  "nav": {
+    "home": "Home",
+    "symptom_checker": "Symptom Checker",
+    "dashboard": "Dashboard",
+    "about": "About",
+    "sign_in": "Sign In",
+    "sign_out": "Sign Out",
+    "profile": "Profile"
+  },
+  "auth": {
+    "login_title": "Login / Registration",
+    "email": "Email",
+    "password": "Password",
+    "full_name": "Full Name",
+    "forgot_password": "Forgot Password?",
+    "login": "Login",
+    "register": "Register Now (New User)",
+    "continue_guest": "Continue as Guest",
+    "sign_up_success": "Check your email to confirm your account!",
+    "language_pref": "Language Preference"
+  },
+  "chat": {
+    "title": "Main Chat / Symptom Input Dashboard",
+    "welcome": "Hello! I am your AI Health Assistant.",
+    "welcome_prompt": "Please describe your symptoms in English or Urdu.",
+    "placeholder": "Describe your symptoms...",
+    "end_session": "End Session",
+    "processing": "Current Assessment Processing...",
+    "severity": "Severity",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "send": "Send"
+  },
+  "results": {
+    "title": "Assessment and Triage Results",
+    "likely_condition": "Likely Condition",
+    "severity": "Severity",
+    "ai_confidence": "AI Confidence",
+    "recommended_action": "Recommended Action",
+    "red_flag": "Red Flag",
+    "red_flag_text": "Seek ER if: Difficulty breathing, Chest pain.",
+    "view_explanation": "View Explanation",
+    "start_new": "Start New Assessment",
+    "specialist": "Recommended Specialist"
+  },
+  "explain": {
+    "title": "Explainability Dashboard",
+    "summary_card": "Summary Card",
+    "predicted_condition": "Predicted Condition",
+    "severity_level": "Severity Level",
+    "model_used": "Model Used",
+    "model_name": "Symptom-Based ML Model v1.0",
+    "key_symptoms": "Key Symptoms Considered",
+    "high_impact": "High Impact",
+    "medium_impact": "Medium Impact",
+    "low_impact": "Low Impact",
+    "ai_reasoning": "AI Reasoning",
+    "download_pdf": "Download Report (PDF)",
+    "back_results": "Back to Results",
+    "start_new": "Start a New Assessment",
+    "back_session": "Back to session",
+    "feature_importance": "Feature Importance Chart"
+  },
+  "disclaimer": "This AI is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.",
+  "dashboard": {
+    "title": "Health Dashboard",
+    "subtitle": "Your health query history",
+    "no_queries": "No Health Queries Yet",
+    "no_queries_desc": "Start by checking your symptoms to build your health history.",
+    "new_check": "New Check",
+    "check_symptoms": "Check Symptoms"
+  },
+  "landing": {
+    "hero_title": "AI-Powered Smart Health Assistant",
+    "hero_subtitle": "Describe your symptoms and get instant, AI-driven health guidance. Understand when to self-care, visit a doctor, or seek urgent attention.",
+    "start_chat": "Start Chat",
+    "learn_more": "Learn More",
+    "features_title": "How It Works",
+    "features_subtitle": "Powered by advanced AI to give you reliable health insights",
+    "cta_title": "Ready to Get Started?",
+    "cta_subtitle": "Create an account to save your health history and get personalized guidance.",
+    "create_account": "Create Free Account",
+    "feature_ai": "AI-Powered Analysis",
+    "feature_ai_desc": "Advanced AI analyzes your symptoms and predicts possible conditions with confidence scores.",
+    "feature_triage": "Smart Triage",
+    "feature_triage_desc": "Get guidance on whether to self-care, visit a doctor, or seek urgent medical attention.",
+    "feature_chat": "Natural Input",
+    "feature_chat_desc": "Describe your symptoms in plain language — our AI understands natural conversation.",
+    "feature_privacy": "Privacy First",
+    "feature_privacy_desc": "Your health data is encrypted and secure. We never share your information.",
+    "feature_fast": "Instant Results",
+    "feature_fast_desc": "Get preliminary health guidance in seconds, anytime and anywhere.",
+    "feature_specialist": "Specialist Referral",
+    "feature_specialist_desc": "Receive recommendations for the right specialist based on your symptoms."
+  },
+  "about": {
+    "title": "About AI Healthcare Chatbot",
+    "subtitle": "An AI-powered health assistant designed to bridge the gap between uncertainty and timely medical action.",
+    "ai_title": "AI-Driven Analysis",
+    "ai_desc": "We use advanced NLP and machine learning models to analyze symptoms and predict possible conditions with confidence scores.",
+    "privacy_title": "Privacy & Security",
+    "privacy_desc": "All health data is encrypted at rest and in transit. We follow strict data privacy practices.",
+    "balance_title": "Balanced Guidance",
+    "balance_desc": "Our system handles both over-concerned users who may panic and under-concerned users who might ignore serious symptoms.",
+    "empathy_title": "Empathetic Approach",
+    "empathy_desc": "We combine accurate triage advice with emotional reassurance, making the experience responsible and empathetic.",
+    "project_info": "Project: AI-Powered Smart Health Assistant — CS619 Final Project",
+    "group_id": "Group ID: F25PROJECT664B0"
+  },
+  "feedback": {
+    "rate": "Rate this analysis:",
+    "thanks": "Thank you for your feedback!"
+  },
+  "guest": {
+    "messages_left": "{{count}} messages remaining as guest.",
+    "limit_reached": "Guest message limit reached. Please sign up to continue.",
+    "sign_up_prompt": "Sign up for unlimited chats, saved history, and more."
+  }
+}

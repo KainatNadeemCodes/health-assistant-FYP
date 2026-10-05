@@ -1,0 +1,466 @@
+disease,symptoms
+Common Cold,runny nose sneezing mild sore throat low grade fever fatigue
+Common Cold,blocked nose watery eyes mild headache sneezing cough
+Common Cold,nasal congestion sneezing sore throat mild tiredness
+Common Cold,stuffy nose mild fever sneezing runny nose body ache
+Common Cold,frequent sneezing watery discharge nose mild throat irritation
+Common Cold,nasal drip mild cough slight headache sneezing
+Common Cold,runny nose congestion mild fever sneezing fatigue
+Common Cold,blocked nose throat irritation sneezing mild body pain
+Common Cold,runny nose mild sore throat sneezing watery eyes fatigue
+Common Cold,nasal congestion sneezing mild fever sore throat
+Common Cold,ناک بہنا چھینکیں آنا ہلکا بخار گلے میں خراش تھکاوٹ
+Common Cold,بند ناک چھینکیں ہلکا سر درد آنکھوں سے پانی آنا
+Common Cold,ناک بند ہونا گلے میں خراش چھینکیں ہلکی تھکاوٹ
+Common Cold,چھینکیں ناک بہنا ہلکا بخار جسم میں درد
+Common Cold,ناک سے پانی بہنا چھینکیں گلے میں جلن ہلکا سر درد
+Flu,high fever chills body aches severe fatigue headache sore throat
+Flu,sudden high fever muscle pain joint pain fatigue weakness
+Flu,fever above 38 degrees severe body ache headache chills sweating
+Flu,high temperature severe muscle aches fatigue loss of appetite
+Flu,sudden onset fever chills severe headache muscle pain cough
+Flu,high fever sweating body ache weakness loss of appetite nausea
+Flu,fever chills severe fatigue muscle ache dry cough sore throat
+Flu,abrupt high fever chills severe myalgia headache fatigue
+Flu,high fever body ache joint pain severe weakness dry cough
+Flu,fever sweating chills muscle pain extreme fatigue headache
+Flu,تیز بخار جسم میں درد ٹھنڈ لگنا شدید تھکاوٹ سر درد
+Flu,اچانک تیز بخار پٹھوں میں درد جوڑوں میں درد کمزوری
+Flu,بخار پسینہ ٹھنڈ لگنا جسم میں درد بھوک نہ لگنا
+Flu,تیز بخار سر درد جسم میں شدید درد کھانسی تھکاوٹ
+Flu,بخار ٹھنڈ لگنا شدید تھکاوٹ گلے میں درد پٹھوں میں درد
+Pneumonia,chest pain difficulty breathing high fever productive cough
+Pneumonia,shortness of breath fever cough with yellow sputum chest tightness
+Pneumonia,breathlessness high temperature chest pain coughing phlegm
+Pneumonia,difficulty breathing fever chills chest pain cough with mucus
+Pneumonia,rapid breathing fever sweating chest pain cough rusty sputum
+Pneumonia,breathing difficulty high fever chest discomfort productive cough
+Pneumonia,shortness of breath fever chills cough with phlegm chest pain
+Pneumonia,labored breathing fever cough with yellow green mucus chest tightness
+Pneumonia,chest pain high fever difficulty breathing cough sputum
+Pneumonia,breathlessness fever sweating chest tightness coughing mucus
+Pneumonia,سینے میں درد سانس لینے میں دشواری تیز بخار بلغم والی کھانسی
+Pneumonia,سانس پھولنا بخار سینے میں تکلیف کھانسی بلغم
+Pneumonia,سانس میں تکلیف تیز بخار سینے میں درد کھانسی بلغم آنا
+Pneumonia,سینے میں درد تیز بخار سانس لینے میں دشواری بلغم
+Pneumonia,سانس پھولنا تیز بخار سینے میں تکلیف کھانسی
+Heart Attack,severe chest pain radiating to left arm jaw pain sweating
+Heart Attack,crushing chest pressure shortness of breath sweating nausea
+Heart Attack,chest tightness left arm pain jaw pain cold sweat dizziness
+Heart Attack,sudden severe chest pain sweating shortness of breath
+Heart Attack,chest pressure radiating arm pain nausea sweating fainting
+Heart Attack,sudden chest pain left shoulder pain sweating breathlessness
+Heart Attack,severe chest tightness pain in left arm cold sweat nausea
+Heart Attack,crushing chest pain jaw pain shortness of breath sweating
+Heart Attack,sudden chest pressure arm pain dizziness sweating nausea
+Heart Attack,chest pain radiation to left arm jaw dizziness cold sweat
+Heart Attack,سینے میں شدید درد بائیں بازو میں درد پسینہ سانس پھولنا
+Heart Attack,سینے پر دباؤ جبڑے میں درد پسینہ متلی بے ہوشی
+Heart Attack,اچانک سینے میں درد بازو میں درد پسینہ سانس لینے میں دشواری
+Heart Attack,سینے میں تکلیف بائیں بازو میں درد سردا پسینہ چکر
+Heart Attack,سینے کا درد جبڑے میں درد پسینہ متلی
+Stroke,sudden numbness one side of face arm weakness slurred speech
+Stroke,sudden confusion severe headache vision loss dizziness
+Stroke,facial drooping arm weakness sudden speech difficulty
+Stroke,sudden severe headache loss of vision one side weakness
+Stroke,sudden weakness one side body slurred speech confusion
+Stroke,face drooping arm numbness speech difficulty sudden onset
+Stroke,sudden loss of balance vision loss severe headache weakness
+Stroke,one sided weakness face drooping slurred speech sudden onset
+Stroke,sudden arm weakness face numbness speech problems
+Stroke,severe sudden headache vision blurred face numbness weakness
+Stroke,اچانک جسم کے ایک طرف کمزوری چہرہ ٹیڑھا ہونا بولنے میں دشواری
+Stroke,اچانک شدید سر درد آنکھوں سے کم نظر آنا چکر آنا
+Stroke,چہرے کا ایک طرف ڈھلکنا بازو میں کمزوری بولنے میں دشواری
+Stroke,اچانک ایک طرف کمزوری بولنے میں مشکل الجھن
+Stroke,شدید سر درد آنکھوں سے نہ دکھنا چہرہ ٹیڑھا ہونا
+Meningitis,severe headache stiff neck high fever sensitivity to light vomiting
+Meningitis,neck stiffness fever photophobia severe headache nausea
+Meningitis,stiff neck severe headache high fever light sensitivity rash
+Meningitis,neck rigidity fever headache vomiting confusion light sensitivity
+Meningitis,severe headache neck stiffness fever rash vomiting
+Meningitis,stiff neck high fever severe headache nausea photophobia
+Meningitis,neck stiffness fever confusion headache sensitivity to light
+Meningitis,severe headache neck rigidity fever vomiting light hurts eyes
+Meningitis,stiff painful neck fever headache rash confusion
+Meningitis,neck stiffness high fever headache photophobia vomiting rash
+Meningitis,گردن اکڑنا شدید سر درد تیز بخار روشنی سے تکلیف قے
+Meningitis,گردن میں سختی بخار روشنی سے تکلیف شدید سر درد
+Meningitis,گردن اکڑنا تیز بخار شدید سر درد قے الجھن
+Meningitis,گردن میں درد بخار سر درد قے روشنی سے تکلیف
+Meningitis,گردن میں اکڑاہٹ تیز بخار شدید سر درد الجھن
+Appendicitis,severe pain lower right abdomen nausea vomiting fever
+Appendicitis,sharp pain right side abdomen fever loss of appetite nausea
+Appendicitis,abdominal pain lower right side vomiting fever tenderness
+Appendicitis,right lower abdominal pain nausea fever cannot eat
+Appendicitis,sudden severe abdominal pain right side fever vomiting
+Appendicitis,pain lower right belly nausea vomiting fever rebound tenderness
+Appendicitis,severe right abdominal pain fever nausea loss of appetite
+Appendicitis,sharp lower right pain fever vomiting cannot walk straight
+Appendicitis,right sided belly pain fever nausea vomiting
+Appendicitis,severe abdominal pain right lower quadrant fever nausea vomiting
+Appendicitis,پیٹ کے دائیں نیچے شدید درد متلی قے بخار
+Appendicitis,پیٹ کے دائیں طرف درد بخار کھانے سے انکار
+Appendicitis,اچانک پیٹ میں درد دائیں طرف بخار قے
+Appendicitis,پیٹ کے نیچے دائیں درد بخار متلی قے
+Appendicitis,شدید پیٹ درد دائیں طرف بخار متلی
+Dengue Fever,high fever severe body ache pain behind eyes rash vomiting
+Dengue Fever,sudden high fever joint pain muscle pain rash weakness
+Dengue Fever,fever severe muscle ache headache rash behind eyes pain
+Dengue Fever,high fever body ache pain eyes rash dengue
+Dengue Fever,fever joint pain rash weakness vomiting dengue symptoms
+Dengue Fever,sudden fever severe body pain rash platelets low
+Dengue Fever,high fever extreme fatigue body ache rash behind eyes pain
+Dengue Fever,fever headache muscle pain joint pain rash dengue
+Dengue Fever,high fever pain behind eyes rash joint pain weakness
+Dengue Fever,sudden fever severe ache rash pain eyes dengue
+Dengue Fever,تیز بخار جسم میں شدید درد آنکھوں کے پیچھے درد خارش
+Dengue Fever,اچانک تیز بخار جوڑوں میں درد جسم میں درد خارش
+Dengue Fever,بخار جسم میں درد آنکھوں میں درد کمزوری
+Dengue Fever,ڈینگی بخار جسم درد خارش پلیٹلیٹ کم
+Dengue Fever,تیز بخار شدید جسم درد خارش آنکھوں کے پیچھے درد
+Typhoid,prolonged fever abdominal pain constipation or diarrhea weakness
+Typhoid,continuous fever stomach pain weakness constipation typhoid
+Typhoid,high fever for many days abdominal pain loss of appetite
+Typhoid,persistent fever stomach cramps weakness diarrhea constipation
+Typhoid,continuous high fever abdominal pain weak appetite constipation
+Typhoid,prolonged fever abdominal cramps constipation weakness typhoid
+Typhoid,high fever for weeks stomach pain weakness loss of appetite
+Typhoid,constant fever abdominal pain diarrhea or constipation weakness
+Typhoid,persistent fever stomach pain weakness no appetite
+Typhoid,continuous fever abdominal pain constipation diarrhea
+Typhoid,مسلسل بخار پیٹ میں درد قبض یا اسہال کمزوری
+Typhoid,لمبے عرصے تک بخار پیٹ میں درد کمزوری ٹائفائیڈ
+Typhoid,مسلسل تیز بخار پیٹ میں تکلیف بھوک نہ لگنا
+Typhoid,ہفتوں تک بخار پیٹ درد کمزوری قبض
+Typhoid,مسلسل بخار پیٹ درد کمزوری بھوک کم ہونا
+Diabetes,excessive thirst frequent urination fatigue blurred vision
+Diabetes,increased urination excessive hunger weight loss fatigue
+Diabetes,frequent urination polydipsia blurred vision slow healing wounds
+Diabetes,extreme thirst frequent urination unexplained weight loss fatigue
+Diabetes,frequent urination hunger thirst fatigue blurred vision diabetes
+Diabetes,increased thirst urination fatigue slow wound healing
+Diabetes,polydipsia polyuria fatigue blurred vision weight loss
+Diabetes,excessive thirst urination hunger fatigue cuts not healing
+Diabetes,increased thirst frequent urination unexplained fatigue blurred vision
+Diabetes,excessive hunger thirst frequent urination fatigue
+Diabetes,بہت زیادہ پیاس بار بار پیشاب تھکاوٹ آنکھوں کا دھندلانا
+Diabetes,پیشاب زیادہ آنا پیاس زیادہ لگنا کمزوری ذیابیطس
+Diabetes,بہت پیاس لگنا بار بار پیشاب بھوک زیادہ لگنا تھکاوٹ
+Diabetes,ذیابیطس پیاس پیشاب تھکاوٹ زخم ٹھیک نہ ہونا
+Diabetes,زیادہ پیاس بار بار پیشاب وزن کم ہونا تھکاوٹ
+Asthma,wheezing shortness of breath chest tightness cough at night
+Asthma,difficulty breathing whistling sound chest tightness dry cough
+Asthma,wheezing breathlessness chest tightness cough cold air triggers
+Asthma,shortness of breath wheezing chest tightness cough exercise induced
+Asthma,breathing difficulty wheezing cough chest tightness asthma
+Asthma,wheezing breathlessness chest tightness at night dry cough
+Asthma,difficulty breathing wheezing chest tightness coughing at night
+Asthma,breathlessness whistling breath chest tight cough asthma
+Asthma,shortness of breath chest tightness cough wheezing
+Asthma,wheezing breathing difficulty chest tightness dry cough
+Asthma,سانس لینے میں دشواری سینے میں جکڑن رات کو کھانسی سانس کی آواز
+Asthma,سانس پھولنا سینے میں سکڑن کھانسی دمہ
+Asthma,سانس لینے میں تکلیف سینے میں جکڑن کھانسی
+Asthma,دمہ سانس پھولنا سینے میں تکلیف رات کو کھانسی
+Asthma,سانس میں آواز سینے میں جکڑن سانس لینے میں دشواری کھانسی
+Hypertension,severe headache dizziness nausea blurred vision high blood pressure
+Hypertension,headache back of head dizziness blurred vision hypertension
+Hypertension,severe throbbing headache dizziness nausea high BP
+Hypertension,headache blurred vision dizziness nausea high blood pressure
+Hypertension,hypertension headache dizziness shortness of breath
+Hypertension,high blood pressure headache dizziness blurred vision nausea
+Hypertension,throbbing headache dizziness blurred vision hypertension
+Hypertension,headache neck pain dizziness blurred vision high BP
+Hypertension,severe headache dizziness hypertension nausea blurred vision
+Hypertension,blood pressure high headache dizziness blurred vision
+Hypertension,شدید سر درد چکر آنا متلی آنکھوں کا دھندلانا ہائی بلڈ پریشر
+Hypertension,سر درد چکر ہائی بلڈ پریشر دھندلا نظر آنا
+Hypertension,تیز سر درد چکر آنا متلی بلڈ پریشر زیادہ
+Hypertension,سر درد دھندلا نظر آنا چکر آنا بلڈ پریشر
+Hypertension,ہائی بی پی سر درد چکر دھندلا نظر آنا متلی
+Migraine,severe one-sided headache nausea vomiting light sensitivity
+Migraine,throbbing headache one side nausea vomiting photophobia
+Migraine,pulsating headache nausea light sensitivity vomiting migraine
+Migraine,severe headache one side vomiting light hurts noise sensitivity
+Migraine,one sided severe headache nausea photophobia aura migraine
+Migraine,throbbing one sided headache nausea vomiting sensitivity light
+Migraine,severe headache nausea vomiting light sensitivity noise sensitivity
+Migraine,pulsating one sided headache nausea vomiting photophobia
+Migraine,migraine throbbing headache nausea light sensitivity vomiting
+Migraine,severe one side head pain nausea light sensitivity vomiting
+Migraine,ایک طرف شدید سر درد متلی قے روشنی سے تکلیف
+Migraine,دھڑکتا سر درد ایک طرف متلی قے روشنی سے تکلیف
+Migraine,شدید سر درد ایک طرف متلی قے روشنی کا برداشت نہ ہونا
+Migraine,سر میں ایک طرف درد متلی قے روشنی اور آواز سے تکلیف
+Migraine,مائیگرین سر درد متلی قے روشنی سے تکلیف
+Skin Allergy,itchy skin rash redness hives contact allergy
+Skin Allergy,skin rash itching redness swelling allergic reaction
+Skin Allergy,itchy red patches skin rash allergy hives
+Skin Allergy,skin itching redness rash hives allergic contact
+Skin Allergy,rash red skin itchy hives allergy
+Skin Allergy,itching skin redness patches rash allergic
+Skin Allergy,skin allergy itchy rash hives redness
+Skin Allergy,red itchy skin rash allergic reaction hives
+Skin Allergy,skin itching redness rash allergy contact dermatitis
+Skin Allergy,itchy rash hives redness skin allergy
+Skin Allergy,کھجلی خارش جلد پر سرخ دھبے الرجی
+Skin Allergy,جلد پر خارش سرخی خارش الرجک رد عمل
+Skin Allergy,خارش والی جلد سرخ دھبے الرجی چھالے
+Skin Allergy,جلد کی الرجی کھجلی خارش سرخی سوجن
+Skin Allergy,کھجلی جلد پر دھبے سرخی الرجی
+Food Poisoning,vomiting diarrhea nausea stomach cramps after eating
+Food Poisoning,nausea vomiting diarrhea stomach pain after bad food
+Typhoid,stomach pain diarrhea vomiting nausea food contamination
+Food Poisoning,vomiting nausea abdominal cramps diarrhea food poisoning
+Food Poisoning,stomach cramps vomiting diarrhea nausea after eating
+Food Poisoning,nausea vomiting diarrhea stomach cramps food poisoning
+Food Poisoning,vomiting diarrhea nausea stomach pain contaminated food
+Food Poisoning,abdominal pain vomiting diarrhea nausea food poisoning
+Food Poisoning,stomach cramps nausea vomiting diarrhea after eating
+Food Poisoning,food poisoning vomiting diarrhea nausea stomach cramps
+Food Poisoning,قے اسہال متلی پیٹ میں درد کھانے کے بعد
+Food Poisoning,متلی قے اسہال پیٹ درد خراب کھانا
+Food Poisoning,پیٹ میں درد قے اسہال متلی فوڈ پوائزننگ
+Food Poisoning,پیٹ میں مروڑ قے اسہال متلی کھانا کھانے کے بعد
+Food Poisoning,فوڈ پوائزننگ قے اسہال پیٹ درد متلی
+UTI,burning urination frequent urination lower abdominal pain cloudy urine
+UTI,painful urination frequent urge to urinate lower back pain cloudy urine
+UTI,burning sensation urination frequent urination abdominal pain
+UTI,UTI burning urination frequent urination pelvic pain
+UTI,frequent urination burning pain urination cloudy urine UTI
+UTI,painful urination frequent urination abdominal pain cloudy urine
+UTI,burning urination frequency pelvic pain cloudy urine UTI
+UTI,urgent frequent urination burning sensation lower abdominal pain
+UTI,UTI frequency burning urination lower back pain
+UTI,frequent urination burning pain lower abdominal cloudy urine
+UTI,پیشاب میں جلن بار بار پیشاب پیٹ کے نیچے درد
+UTI,پیشاب کرتے وقت جلن بار بار پیشاب پیشاب میں بادلاپن
+UTI,یورین انفیکشن جلن پیشاب بار بار آنا پیٹ درد
+UTI,پیشاب میں تکلیف بار بار پیشاب آنا پیٹ کے نیچے درد
+UTI,جلن والا پیشاب بار بار پیشاب پیٹ میں درد بادلا پیشاب
+Depression,persistent sadness loss of interest hopelessness sleep problems
+Depression,feeling sad worthless no interest activities sleep disturbed
+Depression,hopelessness sadness loss of interest fatigue sleep problems
+Depression,persistent low mood sadness no interest depression
+Depression,sadness hopelessness fatigue loss of interest depression
+Depression,feeling worthless sad no motivation sleep disturbed depression
+Depression,persistent sadness no interest hopeless fatigue depression
+Depression,low mood sadness loss of interest difficulty sleeping
+Depression,depression sadness hopeless no motivation sleep problems
+Depression,feeling empty sad no interest fatigue sleep disturbance
+Depression,مسلسل اداسی کسی چیز میں دلچسپی نہ ہونا ناامیدی نیند کی پریشانی
+Depression,اداسی بے کاری نیند میں مسئلہ کچھ اچھا نہ لگنا
+Depression,ناامیدی اداسی تھکاوٹ دلچسپی کا نہ ہونا ڈپریشن
+Depression,مسلسل اداسی ناامیدی کسی کام میں دل نہ لگنا
+Depression,ڈپریشن اداسی تھکاوٹ دلچسپی نہ ہونا نیند نہ آنا
+Anxiety Disorder,excessive worry panic attacks heart racing shortness of breath
+Anxiety Disorder,constant worry anxiety panic shortness of breath restless
+Anxiety Disorder,anxiety panic attacks racing heart sweating worry
+Anxiety Disorder,excessive anxiety worry restlessness panic attack
+Anxiety Disorder,anxiety worry heart pounding breathless panic
+Anxiety Disorder,constant worrying panic attack racing heart anxiety
+Anxiety Disorder,anxiety excessive worry shortness of breath palpitations
+Anxiety Disorder,panic attacks anxiety restlessness heart pounding
+Anxiety Disorder,anxiety disorder worry panic breathless heart racing
+Anxiety Disorder,excessive anxiety worry panic attacks sweating
+Anxiety Disorder,ضرورت سے زیادہ فکر گھبراہٹ دل تیز چلنا سانس پھولنا
+Anxiety Disorder,مسلسل فکر گھبراہٹ کا دورہ سانس لینے میں دشواری
+Anxiety Disorder,اینگزائٹی گھبراہٹ دل کا تیز چلنا پسینہ فکر
+Anxiety Disorder,پریشانی گھبراہٹ کا دورہ دل تیز دھڑکنا
+Anxiety Disorder,فکر گھبراہٹ دل دھڑکنا سانس پھولنا
+Tonsillitis,severe sore throat difficulty swallowing fever swollen tonsils
+Tonsillitis,painful throat swollen tonsils fever difficulty eating
+Tonsillitis,sore throat swollen glands fever tonsillitis pain swallowing
+Tonsillitis,throat pain swollen tonsils fever difficulty swallowing
+Tonsillitis,severe sore throat tonsils swollen painful fever
+Tonsillitis,tonsillitis sore throat swollen tonsils fever swallowing painful
+Tonsillitis,painful swollen tonsils sore throat fever difficulty swallowing
+Tonsillitis,throat pain fever swollen tonsils tonsillitis
+Tonsillitis,sore throat swollen tonsils difficulty swallowing fever
+Tonsillitis,swollen painful tonsils sore throat fever tonsillitis
+Tonsillitis,گلے میں شدید درد ٹانسل کی سوجن بخار نگلنے میں دشواری
+Tonsillitis,گلے میں تکلیف ٹانسل سوجنا بخار کھانا نگلنے میں مشکل
+Tonsillitis,ٹانسل کا درد سوجنا بخار نگلنے میں دشواری
+Tonsillitis,گلے میں درد ٹانسل کی سوجن بخار ٹانسلائٹس
+Tonsillitis,شدید گلے کا درد ٹانسل سوجنا نگلنے میں تکلیف
+Allergic Rhinitis,runny nose sneezing itchy eyes nasal congestion allergy
+Allergic Rhinitis,sneezing itchy eyes runny nose nasal congestion allergic
+Allergic Rhinitis,allergic rhinitis sneezing runny nose itchy eyes congestion
+Allergic Rhinitis,nasal allergy sneezing itchy nose eyes runny nose
+Allergic Rhinitis,sneezing runny nose itchy eyes allergy rhinitis
+Allergic Rhinitis,itchy nose eyes sneezing runny nose allergic rhinitis
+Allergic Rhinitis,nasal congestion sneezing itchy eyes runny nose allergy
+Allergic Rhinitis,allergic rhinitis sneezing itchy eyes runny nose congestion
+Allergic Rhinitis,itchy eyes nose sneezing runny nose allergic
+Allergic Rhinitis,sneezing itchy eyes nasal congestion runny nose allergy
+Allergic Rhinitis,چھینکیں آنا آنکھوں میں کھجلی ناک بہنا الرجی ناک بند
+Allergic Rhinitis,الرجک رائنائٹس چھینکیں آنکھوں میں کھجلی ناک بند
+Allergic Rhinitis,ناک کی الرجی چھینکیں آنکھوں میں کھجلی ناک بہنا
+Allergic Rhinitis,چھینکیں آنکھوں میں کھجلی ناک بہنا ناک بند الرجی
+Allergic Rhinitis,الرجی چھینکیں ناک بہنا آنکھوں میں کھجلی
+Gastritis,stomach pain after eating nausea bloating burning sensation
+Gastritis,abdominal pain nausea vomiting bloating acidity heartburn
+Gastritis,stomach discomfort nausea bloating burning after eating
+Gastritis,upper abdominal pain nausea bloating heartburn gastritis
+Gastritis,stomach burning nausea bloating pain after eating
+Gastritis,gastritis stomach pain burning nausea bloating
+Gastritis,abdominal discomfort nausea bloating burning sensation gastritis
+Gastritis,stomach pain after eating bloating nausea heartburn
+Gastritis,gastritis burning stomach pain nausea bloating
+Gastritis,upper stomach pain burning nausea bloating gastritis
+Gastritis,کھانے کے بعد پیٹ میں درد متلی پیٹ پھولنا جلن
+Gastritis,پیٹ میں درد متلی پھولنا جلن تیزابیت
+Gastritis,پیٹ میں جلن متلی پھولنا کھانے کے بعد درد گیسٹرائٹس
+Gastritis,اوپری پیٹ میں درد جلن متلی پھولنا
+Gastritis,پیٹ میں جلن درد متلی پھولنا گیسٹرائٹس
+Back Pain,lower back pain after lifting cannot stand straight
+Back Pain,severe lower back pain stiffness cannot bend
+Back Pain,back pain radiating to leg sciatica lower back
+Back Pain,chronic lower back pain stiffness morning worse
+Back Pain,lower back pain muscle spasm cannot move properly
+Back Pain,back pain radiating leg numbness sciatica
+Back Pain,lower back stiffness pain after sitting long time
+Back Pain,severe back pain cannot lift anything stiffness
+Back Pain,back pain worse in morning stiffness lower back
+Back Pain,chronic back pain lower back stiffness muscle ache
+Back Pain,کمر کے نیچے درد اٹھانے کے بعد سیدھا کھڑا نہ ہو سکنا
+Back Pain,شدید کمر درد اکڑاہٹ جھکنے میں دشواری
+Back Pain,کمر سے ٹانگ تک درد جانا سائیٹیکا کمر درد
+Back Pain,دائمی کمر درد اکڑاہٹ صبح کو زیادہ
+Back Pain,کمر درد ٹانگ میں سن ہونا سائیٹیکا
+Anemia,fatigue weakness pale skin dizziness shortness of breath
+Anemia,tiredness weakness pallor dizziness breathlessness anemia
+Anemia,extreme fatigue pale skin dizziness headache weakness
+Anemia,weakness tiredness pale nails skin dizziness anemia
+Anemia,fatigue dizziness pale skin shortness of breath anemia
+Anemia,anemia weakness fatigue pale skin dizziness breathlessness
+Anemia,tired weak pale skin dizzy shortness of breath
+Anemia,extreme tiredness weakness pale nails dizziness anemia
+Anemia,fatigue weakness pale skin breathlessness dizziness
+Anemia,anemia fatigue dizziness pale skin weakness
+Anemia,شدید تھکاوٹ کمزوری پیلا رنگ چکر سانس پھولنا خون کی کمی
+Anemia,خون کی کمی کمزوری تھکاوٹ پیلا چہرہ چکر آنا
+Anemia,انیمیا تھکاوٹ کمزوری پیلی جلد چکر سانس پھولنا
+Anemia,کمزوری تھکاوٹ پیلے ناخن پیلا چہرہ چکر خون کی کمی
+Anemia,خون کی کمی تھکاوٹ کمزوری پیلا رنگ سانس پھولنا
+Arthritis,joint pain swelling stiffness morning worse difficulty moving
+Arthritis,painful swollen joints stiffness arthritis
+Arthritis,joint swelling pain stiffness difficulty walking
+Arthritis,arthritis joint pain stiffness morning swelling
+Arthritis,stiff painful joints swelling difficulty movement arthritis
+Arthritis,joint pain swelling stiffness reduced movement arthritis
+Arthritis,painful joints stiffness swelling difficulty moving
+Arthritis,arthritis stiff swollen joints morning pain
+Arthritis,joint pain stiffness swelling arthritis difficulty moving
+Arthritis,stiff swollen painful joints arthritis morning worse
+Arthritis,جوڑوں میں درد سوجن اکڑاہٹ چلنے میں دشواری
+Arthritis,جوڑوں میں درد سوجن اکڑاہٹ گٹھیا
+Arthritis,گٹھیا جوڑوں میں درد سوجن اکڑاہٹ صبح زیادہ
+Arthritis,جوڑوں کا درد سوجن اکڑاہٹ حرکت میں دشواری گٹھیا
+Arthritis,گٹھیا دردناک سوجے ہوئے جوڑ صبح اکڑاہٹ
+Tuberculosis,persistent cough blood in sputum night sweats weight loss
+Tuberculosis,chronic cough coughing blood weight loss night sweats fever
+Tuberculosis,TB cough with blood night sweats weight loss fatigue
+Tuberculosis,prolonged cough sputum blood weight loss night sweats
+Tuberculosis,coughing blood weight loss night sweats fever tuberculosis
+Tuberculosis,TB persistent cough blood sputum weight loss fever
+Tuberculosis,chronic cough night sweats weight loss coughing blood
+Tuberculosis,tuberculosis cough blood night sweats weight loss
+Tuberculosis,persistent productive cough blood night sweats weight loss
+Tuberculosis,TB cough blood sputum night sweats weight loss fever
+Tuberculosis,مسلسل کھانسی خون آنا رات کو پسینہ وزن کم ہونا
+Tuberculosis,ٹی بی کھانسی خون رات کو پسینہ وزن کم ہونا بخار
+Tuberculosis,طویل کھانسی بلغم میں خون رات کو پسینہ وزن کم ہونا
+Tuberculosis,تپ دق کھانسی خون پسینہ وزن کم ہونا تھکاوٹ
+Tuberculosis,کھانسی میں خون رات کو پسینہ وزن کم ہونا بخار ٹی بی
+Kidney Disease,lower back pain swelling feet decreased urination
+Kidney Disease,back pain ankle swelling decreased urine kidney problem
+Kidney Disease,swollen feet ankles decreased urination back pain kidney
+Kidney Disease,kidney pain swollen feet decreased urine fatigue
+Kidney Disease,back flank pain swelling feet decreased urination kidney
+Kidney Disease,kidney disease swollen feet ankles back pain decreased urine
+Kidney Disease,flank pain feet swelling less urination kidney
+Kidney Disease,back pain swelling decreased urination kidney disease
+Kidney Disease,kidney problem swollen feet back pain urination decreased
+Kidney Disease,decreased urination swollen feet back pain kidney disease
+Kidney Disease,کمر میں درد پاؤں سوجنا پیشاب کم ہونا گردے کا مسئلہ
+Kidney Disease,گردے کا مسئلہ پاؤں ٹخنوں میں سوجن کمر درد پیشاب کم
+Kidney Disease,گردے کا درد سوجے پاؤں پیشاب کم تھکاوٹ
+Kidney Disease,کمر میں درد پاؤں سوجنا پیشاب کم ہونا گردے
+Kidney Disease,گردے کی بیماری پاؤں سوجنا کمر درد پیشاب کم ہونا
+Hepatitis,jaundice yellow skin eyes abdominal pain fatigue
+Hepatitis,yellow skin eyes dark urine fatigue abdominal pain hepatitis
+Hepatitis,jaundice dark urine fatigue nausea hepatitis
+Hepatitis,yellow eyes skin fatigue abdominal pain dark urine
+Hepatitis,hepatitis jaundice yellow skin eyes dark urine fatigue
+Hepatitis,yellowing skin eyes dark urine fatigue nausea hepatitis
+Hepatitis,jaundice dark urine abdominal pain fatigue hepatitis
+Hepatitis,yellow skin eyes hepatitis fatigue abdominal pain
+Hepatitis,hepatitis jaundice fatigue dark urine abdominal pain
+Hepatitis,yellow skin dark urine fatigue nausea hepatitis
+Hepatitis,یرقان پیلی جلد آنکھیں گہرا پیشاب تھکاوٹ پیٹ درد
+Hepatitis,ہیپاٹائٹس پیلا رنگ آنکھیں گہرا پیشاب تھکاوٹ
+Hepatitis,یرقان گہرا پیشاب تھکاوٹ متلی ہیپاٹائٹس
+Hepatitis,پیلی آنکھیں جلد تھکاوٹ پیٹ درد گہرا پیشاب
+Hepatitis,ہیپاٹائٹس یرقان تھکاوٹ گہرا پیشاب پیٹ درد
+Psoriasis,red scaly patches skin itchy thick scales psoriasis
+Psoriasis,scaly red skin patches psoriasis itchy thick plaques
+Psoriasis,psoriasis red scaly patches skin itching
+Psoriasis,thick scaly red patches skin psoriasis itching
+Psoriasis,psoriasis itchy red scaly skin patches
+Psoriasis,red patches thick scales itching psoriasis skin
+Psoriasis,scaly skin patches psoriasis red itchy thick
+Psoriasis,psoriasis scaly red patches itchy skin
+Psoriasis,itchy thick scaly red skin patches psoriasis
+Psoriasis,psoriasis red scaly itchy patches skin
+Psoriasis,جلد پر سرخ کھردرے دھبے کھجلی موٹی پرت صدفیہ
+Psoriasis,صدفیہ سرخ کھردری جلد کھجلی
+Psoriasis,جلد پر موٹی کھردری پرت صدفیہ کھجلی
+Psoriasis,سرخ کھردرے دھبے جلد کھجلی صدفیہ
+Psoriasis,صدفیہ جلد پر کھردرے سرخ دھبے کھجلی
+Shingles,painful rash one side body blisters nerve pain shingles
+Shingles,burning rash blisters one side body nerve pain shingles
+Shingles,shingles painful rash blisters one side body
+Shingles,painful blisters rash one side nerve pain shingles
+Shingles,shingles nerve pain burning rash blisters one side
+Shingles,blisters painful rash one side shingles burning
+Shingles,shingles painful rash one side blisters nerve pain
+Shingles,burning nerve pain rash blisters one side shingles
+Shingles,painful shingles rash blisters one side body
+Shingles,shingles burning rash nerve pain blisters one side
+Shingles,جسم کے ایک طرف دردناک خارش چھالے اعصابی درد
+Shingles,دردناک خارش چھالے ایک طرف اعصابی درد شنگلز
+Shingles,شنگلز ایک طرف خارش چھالے جلن اعصابی درد
+Shingles,جسم ایک طرف جلن خارش چھالے اعصابی درد شنگلز
+Shingles,شنگلز دردناک خارش ایک طرف چھالے
+Pediatric Fever,high fever child not eating irritable seizure
+Pediatric Fever,baby high fever not drinking irritable febrile seizure
+Pediatric Fever,child fever above 39 not eating crying continuously
+Pediatric Fever,infant high fever very irritable not feeding
+Pediatric Fever,high temperature child irritable not eating
+Pediatric Fever,child very high fever seizure not drinking
+Pediatric Fever,baby high fever crying irritable not feeding
+Pediatric Fever,child fever seizure not eating very irritable
+Pediatric Fever,infant high temperature not feeding irritable
+Pediatric Fever,child high fever not eating irritable febrile
+Pediatric Fever,بچے کو تیز بخار کھانا نہیں کھا رہا چڑچڑا پن دورہ
+Pediatric Fever,بچے کو تیز بخار نہیں پی رہا چڑچڑا
+Pediatric Fever,بچہ تیز بخار 39 سے اوپر نہیں کھا رہا مسلسل رو رہا
+Pediatric Fever,بچہ تیز بخار بہت چڑچڑا نہیں کھا رہا
+Pediatric Fever,بچے کو تیز بخار دورہ پڑنا نہیں پی رہا
+Malaria,high fever chills sweating headache nausea malaria
+Malaria,cyclic fever chills sweating muscle pain malaria
+Malaria,fever rigors sweating headache malaria
+Malaria,high fever shaking chills sweating malaria
+Malaria,malaria fever chills sweating headache nausea
+Malaria,cyclical fever chills sweating joint pain malaria
+Malaria,fever chills rigors sweating malaria symptoms
+Malaria,high fever shaking chills nausea malaria
+Malaria,malaria cyclic fever chills sweating
+Malaria,fever rigors chills sweating malaria headache
+Malaria,تیز بخار ٹھنڈ لگنا پسینہ سر درد متلی ملیریا
+Malaria,ملیریا بخار ٹھنڈ لگنا پسینہ سر درد
+Malaria,باری کا بخار ٹھنڈ لگنا پسینہ ملیریا
+Malaria,تیز بخار کپکپی پسینہ ملیریا
+Malaria,ملیریا بخار کپکپی پسینہ سر درد متلی
