@@ -1,0 +1,45 @@
+{
+  "generated_at_utc": "2026-10-06T00:05:38.073795+00:00",
+  "input_file": "C:\\Users\\dmain\\OneDrive\\Desktop\\F25PROJECT664B0-App code\\Backend\\data\\dataset.csv",
+  "row_count": 465,
+  "column_names": [
+    "disease",
+    "symptoms"
+  ],
+  "null_counts": {
+    "disease": 0,
+    "symptoms": 0
+  },
+  "duplicate_symptom_rows": 0,
+  "duplicate_disease_symptom_rows": 0,
+  "unique_disease_classes": 31,
+  "class_min_records": 14,
+  "class_max_records": 16,
+  "class_mean_records": 15.0,
+  "language_distribution": {
+    "English": 310,
+    "Urdu-script": 155
+  },
+  "language_percentages": {
+    "English": 66.67,
+    "Urdu-script": 33.33
+  },
+  "symptom_character_count": {
+    "min": 26,
+    "max": 71,
+    "mean": 50.17,
+    "median": 50.0
+  },
+  "symptom_word_count": {
+    "min": 5,
+    "max": 13,
+    "mean": 8.09,
+    "median": 8.0
+  },
+  "quality_flagged_rows": 0,
+  "quality_flag_counts": {},
+  "generated_chart_files": [
+    "class_distribution.png",
+    "language_distribution.png"
+  ]
+}
