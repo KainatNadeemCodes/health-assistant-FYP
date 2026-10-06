@@ -1,0 +1,32 @@
+disease,controlled_synonym_augmentation,fyp_original,total,generated_percentage
+Allergic Rhinitis,20,15,35,57.14
+Anemia,20,15,35,57.14
+Anxiety Disorder,5,15,20,25.0
+Appendicitis,20,15,35,57.14
+Arthritis,5,15,20,25.0
+Asthma,20,15,35,57.14
+Back Pain,0,15,15,0.0
+Common Cold,19,15,34,55.88
+Dengue Fever,19,15,34,55.88
+Depression,8,15,23,34.78
+Diabetes,20,15,35,57.14
+Flu,20,15,35,57.14
+Food Poisoning,18,14,32,56.25
+Gastritis,20,15,35,57.14
+Heart Attack,19,15,34,55.88
+Hepatitis,20,15,35,57.14
+Hypertension,20,15,35,57.14
+Kidney Disease,8,15,23,34.78
+Malaria,20,15,35,57.14
+Meningitis,20,15,35,57.14
+Migraine,20,15,35,57.14
+Pediatric Fever,13,15,28,46.43
+Pneumonia,20,15,35,57.14
+Psoriasis,2,15,17,11.76
+Shingles,0,15,15,0.0
+Skin Allergy,6,15,21,28.57
+Stroke,18,15,33,54.55
+Tonsillitis,20,15,35,57.14
+Tuberculosis,20,15,35,57.14
+Typhoid,22,16,38,57.89
+UTI,16,15,31,51.61
