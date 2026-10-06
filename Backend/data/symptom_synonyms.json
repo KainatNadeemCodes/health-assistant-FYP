@@ -1,0 +1,160 @@
+{
+  "shortness of breath": [
+    "difficulty breathing",
+    "breathlessness",
+    "trouble breathing"
+  ],
+  "difficulty breathing": [
+    "shortness of breath",
+    "breathlessness",
+    "trouble breathing"
+  ],
+  "breathlessness": [
+    "shortness of breath",
+    "difficulty breathing",
+    "trouble breathing"
+  ],
+  "stomach pain": [
+    "abdominal pain",
+    "belly pain",
+    "pain in the stomach"
+  ],
+  "abdominal pain": [
+    "stomach pain",
+    "belly pain",
+    "pain in the abdomen"
+  ],
+  "fatigue": [
+    "tiredness",
+    "feeling very tired",
+    "extreme tiredness"
+  ],
+  "weakness": [
+    "feeling weak",
+    "low energy",
+    "lack of strength"
+  ],
+  "headache": [
+    "head pain",
+    "pain in the head"
+  ],
+  "fever": [
+    "high temperature",
+    "raised temperature"
+  ],
+  "high fever": [
+    "very high temperature",
+    "severe fever"
+  ],
+  "mild fever": [
+    "low-grade fever",
+    "slight fever"
+  ],
+  "cough": [
+    "coughing"
+  ],
+  "sore throat": [
+    "throat pain",
+    "painful throat",
+    "throat irritation"
+  ],
+  "runny nose": [
+    "nasal discharge",
+    "a nose that is running"
+  ],
+  "blocked nose": [
+    "stuffy nose",
+    "nasal congestion"
+  ],
+  "nasal congestion": [
+    "blocked nose",
+    "stuffy nose"
+  ],
+  "sneezing": [
+    "frequent sneezing"
+  ],
+  "chest pain": [
+    "pain in the chest",
+    "chest discomfort"
+  ],
+  "chest tightness": [
+    "tight feeling in the chest",
+    "pressure in the chest"
+  ],
+  "nausea": [
+    "feeling sick",
+    "feeling like vomiting"
+  ],
+  "vomiting": [
+    "throwing up",
+    "being sick"
+  ],
+  "diarrhea": [
+    "loose stools",
+    "frequent loose motions"
+  ],
+  "dizziness": [
+    "feeling dizzy",
+    "lightheadedness"
+  ],
+  "blurred vision": [
+    "blurry vision",
+    "unclear vision"
+  ],
+  "joint pain": [
+    "pain in the joints",
+    "aching joints"
+  ],
+  "muscle pain": [
+    "muscle aches",
+    "aching muscles"
+  ],
+  "body ache": [
+    "body pain",
+    "aches throughout the body"
+  ],
+  "skin rash": [
+    "rash on the skin",
+    "red skin rash"
+  ],
+  "itchy skin": [
+    "itching skin",
+    "skin that feels itchy"
+  ],
+  "swollen feet": [
+    "swelling of the feet",
+    "feet that are swollen"
+  ],
+  "frequent urination": [
+    "urinating often",
+    "needing to urinate frequently"
+  ],
+  "burning urination": [
+    "burning when urinating",
+    "painful urination"
+  ],
+  "loss of appetite": [
+    "reduced appetite",
+    "not feeling hungry"
+  ],
+  "difficulty swallowing": [
+    "trouble swallowing",
+    "pain when swallowing"
+  ],
+  "stiff neck": [
+    "neck stiffness",
+    "a stiff neck"
+  ],
+  "one-sided weakness": [
+    "weakness on one side of the body",
+    "weakness affecting one side"
+  ],
+  "night sweats": [
+    "sweating at night",
+    "heavy sweating during sleep"
+  ],
+  "weight loss": [
+    "unexplained loss of weight",
+    "losing weight without trying"
+  ]
+}
