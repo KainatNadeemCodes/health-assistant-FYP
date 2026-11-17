@@ -37,11 +37,25 @@ jobs:
         run: |
           python train_model.py
 
-      - name: Run Full Backend Automated Test Suite
+      - name: Test Phase 1 - Security, Auth & IDOR Protection
         working-directory: Backend
         run: |
-          set -o pipefail
-          python -m unittest discover -s tests -p "test_*.py" -v 2>&1 | tee test_results.log || (echo "### ❌ Test Suite Failure Log" >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && cat test_results.log >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && exit 1)
+          python -m unittest tests/test_phase1.py -v
+
+      - name: Test Phase 2 - Clinical Dataset & Predictions
+        working-directory: Backend
+        run: |
+          python -m unittest tests/test_phase2.py -v
+
+      - name: Test Phase 3 - Clinical Negation & Guardrails
+        working-directory: Backend
+        run: |
+          python -m unittest tests/test_phase3.py -v
+
+      - name: Test Phase 4 - Database & Architecture
+        working-directory: Backend
+        run: |
+          python -m unittest tests/test_phase4.py -v
 
       - name: Validate Alembic Database Migrations
         working-directory: Backend
