@@ -45,6 +45,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Keys used to persist the session in localStorage
 const STORAGE_USER = "health_user";
 const STORAGE_ROLE = "health_role";
+const STORAGE_TOKEN = "health_token";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading]     = useState(true);
@@ -65,17 +66,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // If localStorage is corrupted just start fresh
       localStorage.removeItem(STORAGE_USER);
       localStorage.removeItem(STORAGE_ROLE);
+      localStorage.removeItem(STORAGE_TOKEN);
     } finally {
       setLoading(false);
     }
   }, []);
 
   // Helper that saves the session to localStorage and state together
-  const persistSession = useCallback((newUser: User, newRole: UserRole) => {
+  const persistSession = useCallback((newUser: User, newRole: UserRole, token?: string) => {
     setUser(newUser);
     setRoleState(newRole);
     localStorage.setItem(STORAGE_USER, JSON.stringify(newUser));
     localStorage.setItem(STORAGE_ROLE, newRole);
+    if (token) {
+      localStorage.setItem(STORAGE_TOKEN, token);
+    }
   }, []);
 
   // ── signIn — calls POST /auth/login on the real backend ──────────────────
@@ -92,7 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role:     dbUser.role === "Patient" ? "patient" : "guest",
       };
 
-      persistSession(newUser, newUser.role);
+      persistSession(newUser, newUser.role, dbUser.access_token);
       return { error: null };
 
     } catch (err: any) {
@@ -122,7 +127,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         role:     "patient",
       };
 
-      persistSession(newUser, "patient");
+      persistSession(newUser, "patient", dbUser.access_token);
       return { error: null };
 
     } catch (err: any) {
@@ -143,6 +148,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setRoleState("guest");
     localStorage.removeItem(STORAGE_USER);
     localStorage.removeItem(STORAGE_ROLE);
+    localStorage.removeItem(STORAGE_TOKEN);
     // Also clear any symptom session data
     sessionStorage.removeItem("analysisResult");
     sessionStorage.removeItem("queryId");
@@ -157,6 +163,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       localStorage.removeItem(STORAGE_USER);
       localStorage.removeItem(STORAGE_ROLE);
+      localStorage.removeItem(STORAGE_TOKEN);
     }
   }, []);
 

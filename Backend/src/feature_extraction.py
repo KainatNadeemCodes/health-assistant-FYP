@@ -30,8 +30,10 @@ import numpy as np
 # Module-specific logger (configured centrally in main application)
 log = logging.getLogger(__name__)
 
-# Default location of the trained TF-IDF vectorizer
-DEFAULT_VECTORIZER_PATH = os.path.join("models", "vectorizer.pkl")
+# Default location of the trained TF-IDF vectorizer (robust to working directory)
+DEFAULT_VECTORIZER_PATH = os.path.abspath(
+    os.getenv("VECTORIZER_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models", "vectorizer.pkl"))
+)
 
 # Cache to avoid loading the same vectorizer repeatedly from disk
 _VECTORIZER_CACHE: dict = {}

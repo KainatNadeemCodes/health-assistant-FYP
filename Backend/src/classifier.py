@@ -10,7 +10,9 @@ import logging
 import numpy as np
 
 log = logging.getLogger(__name__)
-DEFAULT_MODEL_PATH = os.path.join("models", "model.pkl")
+DEFAULT_MODEL_PATH = os.path.abspath(
+    os.getenv("MODEL_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models", "model.pkl"))
+)
 _MODEL_CACHE: dict = {}
 
 def load_model(path: str = DEFAULT_MODEL_PATH):

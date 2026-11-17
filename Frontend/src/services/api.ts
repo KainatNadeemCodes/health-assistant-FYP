@@ -12,7 +12,7 @@
  * -------------------------------------------------------------------------
  */
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -50,21 +50,30 @@ export type HealthQuery = {
 
 // This is what the backend returns after login or register
 export type AuthUser = {
-  id:         number;   // real integer from the database — this is the user_id
-  username:   string;
-  email:      string;
-  role:       string;
-  age:        number | null;
-  gender:     string | null;
-  created_at: string;
+  id:           number;   // real integer from the database — this is the user_id
+  username:     string;
+  email:        string;
+  role:         string;
+  age:          number | null;
+  gender:       string | null;
+  created_at:   string;
+  access_token?: string;
+  token_type?:   string;
 };
 
 // ─── Core request helper ──────────────────────────────────────────────────────
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = typeof window !== "undefined" ? localStorage.getItem("health_token") : null;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(options?.headers as Record<string, string>),
+  };
+
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json", ...options?.headers },
     ...options,
+    headers,
   });
   if (!res.ok) {
     const body = await res.text();

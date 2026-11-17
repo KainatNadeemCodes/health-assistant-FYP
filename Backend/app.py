@@ -25,28 +25,25 @@ FR Requirements hit: FR1, FR2, FR3, FR4, FR6, FR7, FR8, FR10, FR11,
 
 import io
 import os
+import shutil
+import logging
+from typing import List, Optional
+
 # --- Robust FFmpeg Path Handling ---
-# 1. Check if 'ffmpeg' is already accessible in the system PATH (Standard installation)
-if not shutil.who("ffmpeg"):
-    # 2. If not found, define the fallback developer path
-    # NOTE: Evaluators should change this path if ffmpeg is not installed globally
-    dev_ffmpeg_path = r"C:\Users\dmain\Downloads\ffmpeg-master-latest-win64-gpl\bin"
-    
-    if os.path.exists(dev_ffmpeg_path):
-        os.environ["PATH"] += os.pathsep + dev_ffmpeg_path
-        print(f"FFmpeg loaded from developer path: {dev_ffmpeg_path}")
-    else:
-        # 3. Fail-safe: Instead of crashing, we log a warning.
-        # This allows the text-based AI to still work even if voice fails.
-        print("CRITICAL WARNING: ffmpeg not found globally or in the developer path.")
-        print("Voice-to-text functionality will be unavailable on this machine.")
+# 1. Allow environment variable configuration if installed in non-standard location
+custom_ffmpeg = os.getenv("FFMPEG_PATH")
+if custom_ffmpeg and os.path.exists(custom_ffmpeg):
+    os.environ["PATH"] += os.pathsep + custom_ffmpeg
+
+# 2. Check if 'ffmpeg' is accessible in the system PATH
+if not shutil.which("ffmpeg"):
+    print("WARNING: ffmpeg not detected in PATH or FFMPEG_PATH.")
+    print("Voice-to-text audio conversion may be unavailable unless ffmpeg is installed.")
 # -----------------------------------
 
-import logging
-from fastapi import FastAPI, HTTPException, Response, File, UploadFile
+from fastapi import FastAPI, HTTPException, Response, File, UploadFile, Depends, Security
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional
 
 # ── Core logic imports — each module handles one responsibility ────────────────
 from src.preprocessing      import clean_text, validate_medical_text
@@ -66,6 +63,13 @@ from src.database import (
     update_user_role,
 )
 from src.pdf_generator import generate_pdf_from_data
+from src.security import (
+    create_access_token,
+    get_current_user,
+    get_current_user_optional,
+    get_current_admin,
+    ADMIN_SECRET,
+)
 
 # ── Logging — configured here once so all submodules inherit it ───────────────
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
@@ -79,12 +83,14 @@ app = FastAPI(
 
 
 # ===========================================================================
-# CORS — allows our React dev server (port 5173) and any deployed origin
-# In production you would lock this down to your actual domain.
+# CORS — Configurable allowed origins with secure defaults
 # ===========================================================================
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173")
+origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins if origins else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -290,7 +296,10 @@ async def voice_input(
 # ===========================================================================
 
 @app.post("/predict")
-async def predict(data: SymptomInput):
+async def predict(
+    data: SymptomInput,
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
     """
     The heart of the whole project. This endpoint:
     1. Validates the symptom input (blocks PII, non-medical text, too-short input)
@@ -341,8 +350,6 @@ async def predict(data: SymptomInput):
     base_triage = generate_triage(top_condition, top_confidence, cleaned)
 
     # Step 5: Personalized guidance enrichment (UC-03)
-    # This upgrades triage for pregnant patients, adds pediatrician for children,
-    # adds severity-based escalation, and injects risk-flag tips.
     personalized = generate_personalized_guidance(
         disease          = top_condition,
         triage_level     = base_triage["triage_level"],
@@ -357,7 +364,6 @@ async def predict(data: SymptomInput):
 
     # Step 6: Explainability — extract the actual keywords that drove the prediction
     raw_features = get_top_features(model, vectorizer, X)
-    # get_top_features returns [(word, score), ...] — we only need the words for the UI
     key_symptoms = [word for word, _score in raw_features] if raw_features else []
 
     # Step 7: Map triage level from DB format (Low/Medium/High) to frontend format
@@ -365,13 +371,25 @@ async def predict(data: SymptomInput):
     frontend_triage = _TRIAGE_FRONTEND_MAP.get(db_triage_level, "visit-gp")
 
     # Step 8: Persist to DB
-    # We store the DB-format triage level (Low/Medium/High) to satisfy the CHECK constraint.
+    # Prioritize authenticated user from verified JWT over client-supplied user_id
+    persisted_user_id = None
+    if current_user and current_user.get("sub"):
+        try:
+            persisted_user_id = int(current_user["sub"])
+        except ValueError:
+            persisted_user_id = None
+    elif data.user_id:
+        try:
+            persisted_user_id = int(str(data.user_id).replace("patient-", "").replace("guest-", ""))
+        except ValueError:
+            persisted_user_id = None
+
     query_id = save_consultation(
         symptoms   = data.symptoms,
         prediction = top_condition,
         triage     = db_triage_level,
         specialist = personalized.get("specialist", base_triage["specialist"]),
-        user_id    = data.user_id,
+        user_id    = persisted_user_id,
     )
 
     # Build the disclaimer string inline (SRS FR10 — must appear on every result)
@@ -380,8 +398,6 @@ async def predict(data: SymptomInput):
         "Please consult a qualified doctor before making health decisions."
     )
 
-    # Step 9: Return the full PredictionResponse the frontend is expecting
-    # Convert tuples into a list of dictionaries so the UI can read them
     formatted_conditions = [
         {"name": name, "confidence": int(score * 100)}
         for name, score in predictions
@@ -406,65 +422,82 @@ async def predict(data: SymptomInput):
 
 
 # ===========================================================================
-# HISTORY — Registered Users Only  (UC-13)
+# HISTORY — Authenticated Users Only  (UC-13 — IDOR Protected)
 # ===========================================================================
 
 @app.get("/history")
-async def history(user_id: str):
+async def history(
+    user_id: Optional[str] = None,
+    current_user: dict = Depends(get_current_user),
+):
     """
     Returns the last 10 consultations for a logged-in user.
-    The frontend Dashboard.tsx calls this on mount.
-    We remap triage levels back to frontend format here too.
+    Security: Resolves IDOR by enforcing that regular patients can ONLY access
+    their own records based on their verified JWT sub claim.
+    Admins may optionally supply a user_id to inspect patient history.
     """
-    if not user_id:
-        raise HTTPException(status_code=400, detail="user_id is required.")
+    caller_role = str(current_user.get("role", "")).lower()
+    caller_id = current_user.get("sub")
 
-    # Handles both integer and prefixed string IDs like "patient-5"
+    if user_id and caller_role == "admin":
+        target_id_str = user_id
+    else:
+        target_id_str = caller_id
+
     try:
-        clean_id = user_id.strip()
+        clean_id = str(target_id_str).strip()
         for prefix in ["patient-", "guest-", "admin-"]:
             if clean_id.startswith(prefix):
                 clean_id = clean_id.replace(prefix, "")
         numeric_id = int(clean_id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="user_id must be a number.")
+    except (ValueError, TypeError):
+        raise HTTPException(status_code=400, detail="Invalid user identification.")
 
     records = fetch_history(numeric_id)
 
-    # Normalise the stored 'Low/Medium/High' triage to frontend format for display
+    # Normalise stored triage levels
     for r in records:
         if r.get("triage_level") in _TRIAGE_FRONTEND_MAP:
             r["triage_level"] = _TRIAGE_FRONTEND_MAP[r["triage_level"]]
-        # Add fields the Dashboard expects
         r["ai_response"]          = f"Predicted: {r.get('prediction', '')}"
-        r["predicted_conditions"] = None   # full conditions only in session, not persisted
+        r["predicted_conditions"] = None
         r["created_at"]           = r.get("timestamp", "")
 
     return records
 
 
 # ===========================================================================
-# AUTH — Login & Register  (UC-07, UC-08)
+# AUTH — Login & Register  (UC-07, UC-08 — JWT Powered)
 # ===========================================================================
 
 @app.post("/auth/login")
 async def login(data: AuthInput):
     """
     Authenticates a registered user.
-    Returns the user object (without password hash) on success.
+    Returns user profile along with signed JWT access token.
     """
     user = login_user(data.email, data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid email or password.")
-    return user
+
+    token = create_access_token({
+        "sub": str(user["id"]),
+        "email": user["email"],
+        "role": user["role"],
+        "username": user["username"],
+    })
+
+    return {
+        **user,
+        "access_token": token,
+        "token_type": "bearer",
+    }
 
 
 @app.post("/auth/register")
 async def register(data: AuthInput):
     """
-    Creates a new patient account.
-    The full_name field is required for registration.
-    Returns 400 if the email is already registered.
+    Creates a new patient account and returns user profile with JWT access token.
     """
     if not data.full_name:
         raise HTTPException(status_code=400, detail="Full name is required for registration.")
@@ -476,7 +509,19 @@ async def register(data: AuthInput):
     )
     if not user:
         raise HTTPException(status_code=400, detail="Email already registered. Please log in.")
-    return user
+
+    token = create_access_token({
+        "sub": str(user["id"]),
+        "email": user["email"],
+        "role": user["role"],
+        "username": user["username"],
+    })
+
+    return {
+        **user,
+        "access_token": token,
+        "token_type": "bearer",
+    }
 
 
 # ===========================================================================
@@ -559,38 +604,50 @@ async def generate_pdf(data: PdfRequest):
 # ADMIN PANEL  (UC-07 — Analytics, User Management, Role Updates)
 # ===========================================================================
 
-# The admin secret is checked on every admin endpoint.
-# In production this would be a proper JWT token check.
-ADMIN_SECRET = "admin2025"
-
-
-def _require_admin(token: str):
-    """Simple token gate — called at the top of every admin route."""
-    if token != ADMIN_SECRET:
-        raise HTTPException(status_code=403, detail="Admin access denied. Invalid token.")
+def _verify_admin_access(token: str = "", current_user: Optional[dict] = None):
+    """
+    Verifies admin access either via JWT claims (preferred) or legacy admin secret key.
+    """
+    if current_user and str(current_user.get("role", "")).lower() == "admin":
+        return True
+    if token and token == ADMIN_SECRET:
+        return True
+    raise HTTPException(status_code=403, detail="Admin access denied. Valid admin credentials or token required.")
 
 
 @app.post("/admin/login")
 async def admin_login(body: dict):
     """
-    Admin login endpoint. Returns the token that frontend stores in localStorage
-    and sends back in every subsequent admin API call as ?admin_key=...
+    Admin login endpoint.
+    Returns a cryptographically signed JWT with role='admin'.
     """
     if body.get("password") == ADMIN_SECRET:
-        return {"token": ADMIN_SECRET, "role": "admin"}
+        admin_jwt = create_access_token({
+            "sub": "admin",
+            "email": "admin@system.local",
+            "role": "admin",
+            "username": "System Administrator",
+        })
+        return {
+            "token": admin_jwt,
+            "access_token": admin_jwt,
+            "token_type": "bearer",
+            "role": "admin",
+        }
     raise HTTPException(status_code=401, detail="Invalid admin credentials.")
 
 
 @app.get("/admin/analytics")
-async def admin_analytics(admin_key: str = "", token: str = ""):
+async def admin_analytics(
+    admin_key: str = "",
+    token: str = "",
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
     """
     Returns aggregated, anonymized analytics for the dashboard charts.
-    Covers: triage distribution, top conditions, specialist demand,
-            daily activity trend, avg feedback rating.
-    No patient PII is exposed here — SRS Security requirement satisfied.
     """
-    admin_key = admin_key or token
-    _require_admin(admin_key)
+    supplied_token = admin_key or token
+    _verify_admin_access(supplied_token, current_user)
     try:
         return get_analytics_summary()
     except Exception as e:
@@ -599,13 +656,16 @@ async def admin_analytics(admin_key: str = "", token: str = ""):
 
 
 @app.get("/admin/users")
-async def admin_users(admin_key: str = "", token: str = ""):
+async def admin_users(
+    admin_key: str = "",
+    token: str = "",
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
     """
     Returns anonymized user list for the admin panel.
-    No passwords, no raw health data — just role, username, email, join date.
     """
-    admin_key = admin_key or token
-    _require_admin(admin_key)
+    supplied_token = admin_key or token
+    _verify_admin_access(supplied_token, current_user)
     try:
         return get_all_users_admin()
     except Exception as e:
@@ -614,12 +674,16 @@ async def admin_users(admin_key: str = "", token: str = ""):
 
 
 @app.post("/admin/users/{user_id}/role")
-async def admin_update_role(user_id: int, body: dict, admin_key: str = ""):
+async def admin_update_role(
+    user_id: int,
+    body: dict,
+    admin_key: str = "",
+    current_user: Optional[dict] = Depends(get_current_user_optional),
+):
     """
-    Allows the admin to promote or demote a user's role (Guest ↔ Patient).
-    This is the RBAC requirement from the SRS security section.
+    Allows the admin to promote or demote a user's role.
     """
-    _require_admin(admin_key)
+    _verify_admin_access(admin_key, current_user)
     new_role = body.get("role", "")
     if not new_role:
         raise HTTPException(status_code=400, detail="Role field is required.")

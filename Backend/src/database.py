@@ -21,21 +21,23 @@ import hashlib
 import logging
 import json
 import os
-DB_PATH: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "health_assistant.db")
 from datetime import datetime
 from typing import Optional
+from src.security import hash_password as secure_hash_password, verify_password as secure_verify_password
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 log = logging.getLogger(__name__)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-# DB sits in the Backend folder by default, next to app.py
-DB_PATH: str = "health_assistant.db"
+# Robust path resolution regardless of working directory
+DEFAULT_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "health_assistant.db")
+DB_PATH: str = os.path.abspath(os.getenv("DATABASE_PATH", DEFAULT_DB_FILE))
 
-# SRS FR11 — defined user roles
+# Defined user roles
 ROLE_GUEST   = "Guest"
 ROLE_PATIENT = "Patient"
-VALID_ROLES  = {ROLE_GUEST, ROLE_PATIENT}
+ROLE_ADMIN   = "Admin"
+VALID_ROLES  = {ROLE_GUEST, ROLE_PATIENT, ROLE_ADMIN}
 
 VALID_GENDERS = {"Male", "Female", "Other", "Prefer not to say"}
 
@@ -131,13 +133,13 @@ def init_db(path: str = DB_PATH) -> None:
 # ===========================================================================
 
 def _hash_password(plain_text: str) -> str:
-    """SHA-256 hashing. We never store passwords as plain text — ever."""
-    return hashlib.sha256(plain_text.encode("utf-8")).hexdigest()
+    """Salted PBKDF2-HMAC-SHA256 hashing via security module."""
+    return secure_hash_password(plain_text)
 
 
 def _verify_password(plain_text: str, stored_hash: str) -> bool:
-    """Constant-time comparison to check login credentials."""
-    return _hash_password(plain_text) == stored_hash
+    """Verifies password using PBKDF2 with automatic fallback for legacy SHA-256."""
+    return secure_verify_password(plain_text, stored_hash)
 
 
 # ===========================================================================
@@ -161,6 +163,7 @@ def register_user(
 
     p_hash = _hash_password(password)
     conn   = get_connection()
+    user_id = None
     try:
         cur = conn.cursor()
         cur.execute(
@@ -168,19 +171,24 @@ def register_user(
             (username.strip(), email.strip().lower(), p_hash, age, gender, role),
         )
         conn.commit()
-        # Return the full user record by doing a fresh login query
-        return login_user(email, password)
+        user_id = cur.lastrowid
     except sqlite3.IntegrityError:
         log.warning(f"Registration failed — email already exists: {email}")
         return None
     finally:
         conn.close()
 
+    if user_id:
+        return login_user(email, password)
+    return None
+
 
 def login_user(email: str, password: str) -> Optional[dict]:
     """
     Authenticates a user. Returns their profile dict (no password hash included)
     or None if credentials are wrong.
+    If the stored password was hashed with legacy unsalted SHA-256, automatically
+    upgrades it to salted PBKDF2-SHA256 upon successful verification.
     """
     conn = get_connection()
     try:
@@ -189,6 +197,12 @@ def login_user(email: str, password: str) -> Optional[dict]:
         row = cur.fetchone()
 
         if row and _verify_password(password, row["password_hash"]):
+            # Auto-upgrade legacy hash if needed
+            if not row["password_hash"].startswith("pbkdf2_"):
+                new_hash = _hash_password(password)
+                cur.execute("UPDATE users SET password_hash = ? WHERE id = ?", (new_hash, row["id"]))
+                conn.commit()
+
             user_data = dict(row)
             del user_data["password_hash"]  # never send this to the frontend
             return user_data

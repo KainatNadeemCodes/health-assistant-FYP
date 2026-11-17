@@ -4,37 +4,44 @@ PURPOSE: PDF Health Report Generator using ReportLab
 GROUP: F25PROJECT664B0
 """
 
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import cm
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table,
-    TableStyle, HRFlowable
-)
-from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 from io import BytesIO
 from datetime import datetime
 import logging
 
 log = logging.getLogger(__name__)
 
-# Colour palette consistent with the frontend theme
-BLUE       = colors.HexColor("#1F4E79")
-LIGHT_BLUE = colors.HexColor("#2E75B6")
-LIGHT_BG   = colors.HexColor("#D6E4F0")
-RED        = colors.HexColor("#CC0000")
-AMBER      = colors.HexColor("#B7791F")
-GREEN      = colors.HexColor("#276749")
-GREY       = colors.HexColor("#404040")
-WHITE      = colors.white
+try:
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib.units import cm
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table,
+        TableStyle, HRFlowable
+    )
+    from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+    REPORTLAB_AVAILABLE = True
 
-# Triage level to colour mapping
-TRIAGE_COLORS = {
-    "Low":    GREEN,
-    "Medium": AMBER,
-    "High":   RED,
-}
+    # Colour palette consistent with the frontend theme
+    BLUE       = colors.HexColor("#1F4E79")
+    LIGHT_BLUE = colors.HexColor("#2E75B6")
+    LIGHT_BG   = colors.HexColor("#D6E4F0")
+    RED        = colors.HexColor("#CC0000")
+    AMBER      = colors.HexColor("#B7791F")
+    GREEN      = colors.HexColor("#276749")
+    GREY       = colors.HexColor("#404040")
+    WHITE      = colors.white
+
+    # Triage level to colour mapping
+    TRIAGE_COLORS = {
+        "Low":    GREEN,
+        "Medium": AMBER,
+        "High":   RED,
+    }
+except ImportError:
+    REPORTLAB_AVAILABLE = False
+    log.warning("ReportLab is not installed. PDF generation endpoint will be disabled.")
+    TRIAGE_COLORS = {}
 
 # Triage level to label mapping
 TRIAGE_LABELS = {
@@ -52,6 +59,9 @@ def generate_pdf_from_data(data: dict) -> bytes:
     This function accepts the full result payload directly from the
     frontend so it works for both guest and registered user sessions.
     """
+    if not REPORTLAB_AVAILABLE:
+        raise RuntimeError("ReportLab library is required for PDF generation but is not installed.")
+
     buffer = BytesIO()
 
     try:

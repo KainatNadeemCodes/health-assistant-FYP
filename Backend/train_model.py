@@ -73,9 +73,10 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
-# Paths
-DATA_PATH = os.path.join("data", "dataset.csv")
-MODEL_DIR = "models"
+# Paths — resolved relative to train_model.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "data", "dataset.csv")
+MODEL_DIR = os.path.join(BASE_DIR, "models")
 MODEL_PATH = os.path.join(MODEL_DIR, "model.pkl")
 VECTORIZER_PATH = os.path.join(MODEL_DIR, "vectorizer.pkl")
 

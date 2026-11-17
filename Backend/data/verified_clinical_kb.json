@@ -1,0 +1,312 @@
+{
+  "Allergic Rhinitis": {
+    "domain": "Respiratory / ENT",
+    "primary_en": ["sneezing", "nasal congestion", "runny nose", "itchy nose", "watery eyes", "itchy eyes"],
+    "secondary_en": ["postnasal drip", "throat tickle", "mild fatigue", "clear nasal discharge", "puffy eyes"],
+    "modifiers_en": ["seasonal", "worse in morning", "triggered by dust", "continuous", "frequent"],
+    "primary_ur": ["چھینکیں آنا", "ناک بند ہونا", "ناک بہنا", "ناک میں خارش", "آنکھوں سے پانی بہنا"],
+    "secondary_ur": ["گلے میں کھچاؤ", "ہلکی تھکاوٹ", "آنکھوں میں خارش", "ناک میں جلن"],
+    "modifiers_ur": ["صبح کے وقت زیادہ", "موسمی", "گرد و غبار سے", "مسلسل"],
+    "sources": ["Columbia CUMC", "Mayo Clinic Allergic Rhinitis Monograph", "NHS"]
+  },
+  "Anemia": {
+    "domain": "Hematology",
+    "primary_en": ["fatigue", "extreme tiredness", "pale skin", "weakness", "shortness of breath", "dizziness"],
+    "secondary_en": ["cold hands and feet", "brittle nails", "headache", "chest pain on exertion", "lightheadedness", "fast heartbeat"],
+    "modifiers_en": ["chronic", "gradual onset", "feeling exhausted", "persistent", "upon standing"],
+    "primary_ur": ["شدید تھکاوٹ", "چہرہ زرد پڑنا", "جسمانی کمزوری", "سانس پھولنا", "چکر آنا"],
+    "secondary_ur": ["ہاتھ پاؤں ٹھنڈے رہنا", "سر میں ہلکا درد", "دل کی دھڑکن تیز ہونا", "بے دم ہونا"],
+    "modifiers_ur": ["مسلسل", "آہستہ آہستہ", "روزمرہ کاموں میں"],
+    "sources": ["CDC Anemia Guidance", "Mayo Clinic Hematology", "NHS"]
+  },
+  "Anxiety Disorder": {
+    "domain": "Mental Health",
+    "primary_en": ["excessive worry", "restlessness", "rapid heart rate", "feeling nervous", "trembling", "sweating"],
+    "secondary_en": ["difficulty concentrating", "muscle tension", "sleep trouble", "hyperventilation", "sense of impending doom"],
+    "modifiers_en": ["uncontrollable", "sudden panic", "persistent", "constant", "intense"],
+    "primary_ur": ["بے چینی", "گھبراہٹ", "دل کی دھڑکن تیز ہونا", "خوف اور پریشانی", "ہاتھ پاؤں کانپنا"],
+    "secondary_ur": ["نیند نہ آنا", "پٹھوں میں تناؤ", "توجہ مرکوز کرنے میں دشواری", "پسینہ آنا"],
+    "modifiers_ur": ["بے وجہ", "اچانک گھبراہٹ", "مسلسل پریشانی"],
+    "sources": ["WHO Anxiety Spectrum Guide", "Mayo Clinic Psychiatry", "NHS"]
+  },
+  "Appendicitis": {
+    "domain": "Gastroenterology / Emergency",
+    "primary_en": ["sharp lower right abdominal pain", "pain starting near navel moving to right lower side", "nausea", "vomiting", "low-grade fever"],
+    "secondary_en": ["loss of appetite", "abdominal tenderness", "inability to pass gas", "constipation", "pain worsening with coughing or moving"],
+    "modifiers_en": ["sudden sharp onset", "progressively worsening", "severe tenderness", "acute"],
+    "primary_ur": ["پیٹ کے نچلے دائیں حصے میں شدید درد", "ناف سے دائیں طرف پھیلنے والا درد", "متلی اور الٹی", "ہلکا بخار"],
+    "secondary_ur": ["بھوک بالکل نہ لگنا", "کھانسنے یا ہلنے سے درد بڑھنا", "پیٹ چھونے پر سخت درد"],
+    "modifiers_ur": ["اچانک شدید درد", "مسلسل بڑھتا ہوا", "ناقابل برداشت"],
+    "sources": ["Columbia CUMC Emergency Surgery", "CDC Acute Appendicitis", "Mayo Clinic"]
+  },
+  "Arthritis": {
+    "domain": "Rheumatology",
+    "primary_en": ["joint pain", "joint stiffness", "swelling in joints", "reduced range of motion", "tenderness in joints"],
+    "secondary_en": ["warmth around joints", "morning stiffness lasting over 30 minutes", "joint redness", "difficulty walking"],
+    "modifiers_en": ["worse in morning", "chronic", "in knees and hands", "worsens with cold weather"],
+    "primary_ur": ["جوڑوں میں درد", "جوڑوں کی اکڑن", "جوڑوں پر سوجن", "چلنے پھرنے میں دشواری"],
+    "secondary_ur": ["صبح کے وقت جوڑ سخت ہونا", "جوڑوں میں گرمی اور لالی", "گھٹنوں اور انگلیوں میں درد"],
+    "modifiers_ur": ["صبح کے وقت زیادہ", "دائمی درد", "سرد موسم میں"],
+    "sources": ["CDC Arthritis Monograph", "Mayo Clinic Rheumatology", "NHS"]
+  },
+  "Asthma": {
+    "domain": "Respiratory",
+    "primary_en": ["wheezing", "shortness of breath", "chest tightness", "coughing especially at night", "difficulty breathing"],
+    "secondary_en": ["rapid shallow breathing", "trouble sleeping caused by coughing", "whistling sound when exhaling", "fatigue on exertion"],
+    "modifiers_en": ["triggered by cold air", "worse at night", "acute flare-up", "during exercise"],
+    "primary_ur": ["سانس میں سیٹی کی آواز", "سانس لینے میں دشواری", "سینے میں جکڑن", "رات کو شدید کھانسی"],
+    "secondary_ur": ["تھوڑا چلنے پر سانس پھولنا", "کھانسی کے دورے", "دم گھٹنا"],
+    "modifiers_ur": ["رات کے وقت", "گرد اور دھویں سے", "شدید دورہ"],
+    "sources": ["CDC Asthma Clinical Protocol", "Columbia CUMC Pulmonology", "WHO"]
+  },
+  "Back Pain": {
+    "domain": "Musculoskeletal",
+    "primary_en": ["lower back ache", "stabbing spinal pain", "muscle spasm in back", "stiffness in lumbar area", "difficulty bending"],
+    "secondary_en": ["pain radiating to buttock", "dull constant ache", "worse after prolonged sitting", "inability to stand upright"],
+    "modifiers_en": ["sharp", "chronic lumbar", "after lifting heavy object", "persistent dull"],
+    "primary_ur": ["کمر کے نچلے حصے میں درد", "کمر میں شدید کھچاؤ", "جھکنے اور اٹھنے میں تکلیف", "کمر میں اکڑن"],
+    "secondary_ur": ["درد کولہے تک جانا", "دیر تک بیٹھنے سے تکلیف", "سیدھا کھڑے ہونے میں مشکل"],
+    "modifiers_ur": ["وزن اٹھانے کے بعد", "مسلسل مدہم درد", "شدید کھچاؤ"],
+    "sources": ["Mayo Clinic Spine Center", "NHS Back Pain Guidance"]
+  },
+  "Common Cold": {
+    "domain": "Infectious / ENT",
+    "primary_en": ["runny nose", "sneezing", "sore throat", "mild nasal congestion", "low-grade fever", "mild cough"],
+    "secondary_en": ["watery eyes", "mild body aches", "tiredness", "headache", "throat tickle", "clear phlegm"],
+    "modifiers_en": ["gradual onset", "mild", "for 3 days", "post-exposure"],
+    "primary_ur": ["ناک بہنا", "چھینکیں آنا", "گلے میں خراش", "ہلکا بخار", "ناک بند ہونا"],
+    "secondary_ur": ["آنکھوں میں پانی", "ہلکا سر درد", "جسم ٹوٹنا", "ہلکی تھکاوٹ"],
+    "modifiers_ur": ["دو تین دن سے", "ہلکا پھلکا", "موسم بدلنے پر"],
+    "sources": ["CDC Common Cold Case Definition", "NHS Cold Overview"]
+  },
+  "Dengue Fever": {
+    "domain": "Tropical Infectious / Emergency",
+    "primary_en": ["sudden high fever", "severe retro-orbital pain", "severe joint and muscle pain", "breakbone fever", "skin rash"],
+    "secondary_en": ["nausea", "vomiting", "mild bleeding from gums", "extreme fatigue", "platelet drop symptoms"],
+    "modifiers_en": ["high fever above 103F", "sudden onset", "severe aching behind eyes", "acute"],
+    "primary_ur": ["اچانک تیز بخار", "آنکھوں کے پیچھے شدید درد", "ہڈیوں اور پٹھوں میں شدید درد", "جسم پر سرخ دانے"],
+    "secondary_ur": ["مسوڑھوں سے خون آنا", "متلی اور قے", "شدید نڈھالی اور کمزوری"],
+    "modifiers_ur": ["تیز بخار", "شدید ترین درد", "مچھر کے کاٹنے کے بعد"],
+    "sources": ["WHO Dengue Guidelines", "CDC Dengue Clinical Management"]
+  },
+  "Depression": {
+    "domain": "Mental Health",
+    "primary_en": ["persistent sadness", "loss of interest in activities", "feeling hopeless", "low energy", "fatigue"],
+    "secondary_en": ["changes in appetite", "insomnia or oversleeping", "difficulty concentrating", "feeling worthless", "irritability"],
+    "modifiers_en": ["lasting over two weeks", "constant emotional numbness", "chronic", "severe emptiness"],
+    "primary_ur": ["مستقل اداسی", "کاموں میں دل نہ لگنا", "مایوسی اور ناامیدی", "شدید ذہنی اور جسمانی تھکن"],
+    "secondary_ur": ["بھوک نہ لگنا یا بہت زیادہ لگنا", "نیند نہ آنا", "تنہائی پسندی", "دل گھبرانا"],
+    "modifiers_ur": ["کئی ہفتوں سے", "ہر وقت اداس", "گہری مایوسی"],
+    "sources": ["WHO Depression Factsheet", "Mayo Clinic Psychiatry", "NHS"]
+  },
+  "Diabetes": {
+    "domain": "Endocrinology",
+    "primary_en": ["increased thirst", "frequent urination especially at night", "unexplained weight loss", "increased hunger", "blurry vision"],
+    "secondary_en": ["slow-healing sores", "fatigue", "dry mouth", "frequent infections", "tingling in hands or feet"],
+    "modifiers_en": ["gradual onset", "high blood sugar", "persistent thirst", "chronic"],
+    "primary_ur": ["بار بار پیشاب آنا", "بہت زیادہ پیاس لگنا", "بغیر وجہ وزن کم ہونا", "شدید بھوک لگنا"],
+    "secondary_ur": ["دھندلا نظر آنا", "زخم دیر سے بھرنا", "ہاتھ پاؤں میں سوئیاں چبھنا", "تھکاوٹ"],
+    "modifiers_ur": ["کافی عرصے سے", "رات کو بار بار پیشاب", "مسلسل پیاس"],
+    "sources": ["ADA Standards of Care", "CDC Diabetes Clinical Basics", "Mayo Clinic"]
+  },
+  "Flu": {
+    "domain": "Infectious / Respiratory",
+    "primary_en": ["abrupt high fever", "severe body aches", "chills and shaking", "dry cough", "extreme fatigue", "headache"],
+    "secondary_en": ["sore throat", "runny or stuffy nose", "sweating", "loss of appetite", "general weakness"],
+    "modifiers_en": ["sudden onset within hours", "high fever over 101F", "prostrating fatigue"],
+    "primary_ur": ["اچانک تیز بخار", "جسم اور پٹھوں میں شدید درد", "کپکپی اور سردی لگنا", "خشک کھانسی", "شدید نڈھالی"],
+    "secondary_ur": ["سر میں شدید درد", "گلے میں سوزش", "بھوک بند ہونا", "پسینہ آنا"],
+    "modifiers_ur": ["اچانک شروع ہونے والا", "شدید کمزوری کے ساتھ", "تیز تپ چڑھنا"],
+    "sources": ["CDC Influenza Clinical Criteria", "WHO Global Influenza", "Mayo Clinic"]
+  },
+  "Food Poisoning": {
+    "domain": "Gastroenterology / Infectious",
+    "primary_en": ["watery diarrhea", "stomach cramps", "nausea", "vomiting", "mild fever"],
+    "secondary_en": ["dehydration symptoms", "loss of appetite", "weakness", "bloating", "chills"],
+    "modifiers_en": ["hours after eating outside", "sudden acute onset", "severe abdominal cramping"],
+    "primary_ur": ["پانی جیسے پتلے دست", "پیٹ میں شدید مروڑ", "متلی اور بار بار قے آنا", "پیٹ میں درد"],
+    "secondary_ur": ["کمزوری اور نقاہت", "پیاس کی شدت", "ہلکا بخار اور بے چینی"],
+    "modifiers_ur": ["باہر کا کھانا کھانے کے بعد", "اچانک مروڑ کے ساتھ", "چند گھنٹوں میں"],
+    "sources": ["CDC Foodborne Illness Guidance", "Mayo Clinic Gastroenterology", "NHS"]
+  },
+  "Gastritis": {
+    "domain": "Gastroenterology",
+    "primary_en": ["burning upper abdominal ache", "indigestion", "heartburn", "bloating after meals", "nausea"],
+    "secondary_en": ["feeling full quickly", "belching", "loss of appetite", "sour taste in mouth", "stomach acid reflux"],
+    "modifiers_en": ["worse on empty stomach", "burning gnawing sensation", "after spicy food", "chronic"],
+    "primary_ur": ["معدے میں شدید جلن", "پیٹ کے اوپری حصے میں جلن دار درد", "بدہضمی اور کھٹے ڈکار", "پیٹ پھولنا"],
+    "secondary_ur": ["کھانا کھاتے ہی پیٹ بھر جانا", "سینے میں جلن", "متلی اور بے آرامی"],
+    "modifiers_ur": ["خالی پیٹ زیادہ", "مرچ مصالحے کے بعد", "مسلسل تیزابیت"],
+    "sources": ["Columbia CUMC Gastritis Monograph", "Mayo Clinic Digestive Health", "NHS"]
+  },
+  "Heart Attack": {
+    "domain": "Cardiology / Critical Emergency",
+    "primary_en": ["crushing chest pressure", "chest pain radiating to left arm", "pain spreading to jaw neck or back", "severe shortness of breath", "cold sweats"],
+    "secondary_en": ["lightheadedness", "sudden dizziness", "nausea", "unexplained anxiety", "sense of impending death"],
+    "modifiers_en": ["severe crushing pressure", "sudden onset", "not relieved by rest", "acute critical"],
+    "primary_ur": ["سینے پر شدید بوجھ اور دباؤ", "بائیں بازو میں پھیلنے والا سینے کا درد", "جبڑے اور گردن تک جانے والا درد", "سانس گھٹنا اور ٹھنڈے پسینے آنا"],
+    "secondary_ur": ["شدید چکر آنا اور بے ہوشی", "دل کی دھڑکن بے قابو ہونا", "شدید متلی اور گھبراہٹ"],
+    "modifiers_ur": ["سینے میں شدید گھٹن", "اچانک دورہ", "ناقابل برداشت دباؤ"],
+    "sources": ["AHA Acute Coronary Syndrome Protocols", "CDC Heart Disease Guidelines", "Mayo Clinic"]
+  },
+  "Hepatitis": {
+    "domain": "Hepatology / Infectious",
+    "primary_en": ["yellowing of skin and eyes", "jaundice", "dark yellow urine", "pale clay-colored stools", "fatigue"],
+    "secondary_en": ["right upper quadrant abdominal discomfort", "loss of appetite", "nausea", "low-grade fever", "joint ache"],
+    "modifiers_en": ["gradual jaundice", "chronic fatigue", "liver area tenderness"],
+    "primary_ur": ["آنکھوں اور جلد کا پیلا پڑنا", "یرقان", "پیشاب کا رنگ گہرا زرد ہونا", "شدید تھکن اور کمزوری"],
+    "secondary_ur": ["پیٹ کے دائیں طرف اوپری حصے میں درد", "بھوک کا بالکل ختم ہونا", "متلی اور الٹی"],
+    "modifiers_ur": ["پیلاہٹ کے ساتھ", "آہستہ آہستہ", "مسلسل سستی"],
+    "sources": ["WHO Viral Hepatitis Guidelines", "CDC Hepatitis Clinical Overview", "Mayo Clinic"]
+  },
+  "Hypertension": {
+    "domain": "Cardiology",
+    "primary_en": ["high blood pressure reading", "morning dull headache", "dizziness", "shortness of breath on exertion"],
+    "secondary_en": ["blurred vision", "ringing in ears", "chest flutter", "flushed face", "nosebleeds in severe cases"],
+    "modifiers_en": ["asymptomatic elevated pressure", "chronic high BP", "persistent occipital ache"],
+    "primary_ur": ["ہائی بلڈ پریشر", "سر کے پچھلے حصے میں بھاری پن اور درد", "چکر آنا اور آنکھوں کے آگے اندھیرا", "سانس پھولنا"],
+    "secondary_ur": ["کانوں میں سیٹیاں بجنا", "چہرے پر سرخی", "دل کی تیز دھڑکن"],
+    "modifiers_ur": ["مسلسل ہائی پریشر", "صبح کے وقت سر بھاری", "دائمی"],
+    "sources": ["AHA Hypertension Guidelines", "CDC Blood Pressure Clinical Protocol", "NHS"]
+  },
+  "Kidney Disease": {
+    "domain": "Nephrology",
+    "primary_en": ["swelling in ankles and feet", "edema", "foamy or bubbly urine", "changes in urination frequency", "persistent fatigue"],
+    "secondary_en": ["flank pain in lower back", "metallic taste in mouth", "shortness of breath", "loss of appetite", "puffy eyes in morning"],
+    "modifiers_en": ["bilateral ankle swelling", "chronic progressive", "nocturia"],
+    "primary_ur": ["ٹخنوں اور پاؤں پر سوجن", "پیشاب میں جھاگ آنا", "پیشاب کی مقدار میں تبدیلی", "شدید کمزوری اور سستی"],
+    "secondary_ur": ["کمر اور پہلو میں درد", "منہ کا ذائقہ خراب ہونا", "صبح چہرے پر سوجن"],
+    "modifiers_ur": ["پاؤں پھول جانا", "آہستہ آہستہ بڑھتی بیماری", "رات کو بار بار پیشاب"],
+    "sources": ["NKF Kidney Disease Clinical Indicators", "Mayo Clinic Nephrology", "NHS"]
+  },
+  "Malaria": {
+    "domain": "Tropical Infectious",
+    "primary_en": ["shaking chills", "high fever recurring in cycles", "profuse sweating as fever breaks", "headache", "severe muscle pain"],
+    "secondary_en": ["nausea", "vomiting", "diarrhea", "anemia symptoms", "extreme fatigue"],
+    "modifiers_en": ["cyclical fever pattern", "rigors with violent shaking", "every 48 hours"],
+    "primary_ur": ["کپکپی کے ساتھ تیز بخار", "ٹھنڈ لگ کر بخار چڑھنا", "بخار اترتے وقت پسینے سے شرابور ہونا", "سر اور جسم میں شدید درد"],
+    "secondary_ur": ["متلی اور الٹیاں", "شدید کمزوری اور نقاہت", "تلی اور جگر میں سوجن"],
+    "modifiers_ur": ["نوبتی بخار", "وقفے وقفے سے سردی لگنا", "شام کے وقت بخار"],
+    "sources": ["WHO Malaria Treatment Guidelines", "CDC Malaria Diagnostic Guidelines"]
+  },
+  "Meningitis": {
+    "domain": "Neurology / Critical Emergency",
+    "primary_en": ["severe stiff neck", "inability to touch chin to chest", "sudden high fever", "excruciating headache", "sensitivity to light", "photophobia"],
+    "secondary_en": ["confusion", "altered mental state", "seizures", "nausea and projectile vomiting", "purplish skin rash"],
+    "modifiers_en": ["acute rigidity", "rapidly deteriorating", "severe light intolerance", "critical"],
+    "primary_ur": ["گردن میں شدید اکڑن", "گردن نیچے جھکانے میں شدید تکلیف", "اچانک تیز بخار", "ناقابل برداشت سر درد", "روشنی سے شدید گھبراہٹ"],
+    "secondary_ur": ["بے ہوشی اور غنودگی", "الٹی اور متلی", "دماغی الجھن اور دورے"],
+    "modifiers_ur": ["اچانک شدید کیفیت", "گردن کا سخت ہونا", "فوری ایمرجنسی"],
+    "sources": ["CDC Bacterial Meningitis Case Criteria", "Mayo Clinic Neurology", "NHS"]
+  },
+  "Migraine": {
+    "domain": "Neurology",
+    "primary_en": ["throbbing unilateral headache", "one-sided pounding head pain", "nausea", "extreme sensitivity to light", "sensitivity to sound"],
+    "secondary_en": ["visual aura", "seeing flashing zigzag lights", "vomiting", "worsened by physical movement", "dizziness"],
+    "modifiers_en": ["pulsating unilateral", "hours to days", "triggered by stress or lights"],
+    "primary_ur": ["آدھے سر کا شدید درد", "دھڑکتا ہوا سر درد", "روشنی اور آواز سے شدید تکلیف", "متلی اور قے کی کیفیت"],
+    "secondary_ur": ["آنکھوں کے آگے چمکدار روشنیاں نظر آنا", "سر کی رگیں پھڑکنا", "تھوڑی حرکت سے درد کا بڑھنا"],
+    "modifiers_ur": ["آدھے سر میں", "شدید ٹیسیں اٹھنا", "اندھیرے کمرے کی ضرورت"],
+    "sources": ["American Headache Society Guidelines", "Mayo Clinic Neurology", "NHS"]
+  },
+  "Pediatric Fever": {
+    "domain": "Pediatrics",
+    "primary_en": ["high fever in child", "hot forehead", "crying irritable infant", "loss of appetite in toddler", "lethargy in child"],
+    "secondary_en": ["flushed warm cheeks", "refusing fluids or milk", "fussiness", "shivering in infant", "sleepiness"],
+    "modifiers_en": ["temperature above 102F in child", "post-immunization or viral", "acute onset"],
+    "primary_ur": ["بچے کو تیز بخار", "بچے کا مسلسل رونا اور چڑچڑاپن", "جسم اور ماتھا گرم ہونا", "دودھ یا کھانا نہ پینا"],
+    "secondary_ur": ["بچے کی سستی اور غنودگی", "گال سرخ ہونا", "کپکپاہٹ"],
+    "modifiers_ur": ["چھوٹے بچے کو", "اچانک تیز بخار", "دودھ چھوڑ دینا"],
+    "sources": ["AAP Pediatric Fever Management Protocols", "Mayo Clinic Pediatrics", "NHS"]
+  },
+  "Pneumonia": {
+    "domain": "Pulmonology / Infectious",
+    "primary_en": ["cough with green yellow or bloody phlegm", "high fever", "sharp stabbing chest pain when breathing", "shortness of breath", "chills"],
+    "secondary_en": ["shallow rapid breathing", "fatigue", "sweating", "loss of appetite", "confusion in older adults"],
+    "modifiers_en": ["pleuritic pain on inhalation", "productive persistent cough", "acute bacterial"],
+    "primary_ur": ["بلغم والی کھانسی", "سانس لیتے وقت سینے میں چبھن دار درد", "تیز بخار اور کپکپی", "سانس لینے میں شدید دشواری"],
+    "secondary_ur": ["پیلے یا سبز رنگ کا بلغم", "تیز تیز سانسیں لینا", "شدید کمزوری اور پسینہ"],
+    "modifiers_ur": ["سینے میں جکڑن کے ساتھ", "گہرے سانس پر درد", "شدید نمونیا"],
+    "sources": ["ATS/IDSA Pneumonia Guidelines", "CDC Pneumonia Clinical Basics", "Mayo Clinic"]
+  },
+  "Psoriasis": {
+    "domain": "Dermatology",
+    "primary_en": ["red patches of skin covered with silvery scales", "dry cracked skin that bleeds", "itching", "burning skin sensation", "soreness"],
+    "secondary_en": ["thickened pitted nails", "swollen stiff joints", "plaque on elbows and knees", "flaking skin scales"],
+    "modifiers_en": ["silvery scale plaques", "chronic recurrent flares", "on scalp elbows knees"],
+    "primary_ur": ["جلد پر چاندی جیسے سفید چھلکے", "جلد پر سرخ دھبے اور خارش", "جلد کا خشک ہو کر پھٹنا اور خون آنا", "سوزش اور جلن"],
+    "secondary_ur": ["کہنیوں اور گھٹنوں پر پپڑیاں", "ناخنوں کا خراب ہونا", "جلد چھلکے بن کر اترنا"],
+    "modifiers_ur": ["دائمی جلد کی بیماری", "کھجلی کے ساتھ پپڑیاں", "سرخی اور جلن"],
+    "sources": ["AAD Psoriasis Clinical Guidelines", "Mayo Clinic Dermatology", "NHS"]
+  },
+  "Shingles": {
+    "domain": "Dermatology / Infectious",
+    "primary_en": ["painful rash appearing as a single stripe on one side of body", "fluid-filled blisters", "burning tingling or numbness", "hypersensitivity of skin"],
+    "secondary_en": ["fever", "headache", "fatigue", "intense itching over affected nerve pathway", "sharp nerve pain"],
+    "modifiers_en": ["unilateral dermatomal band", "blisters breaking and crusting", "intense burning neuropathic"],
+    "primary_ur": ["جسم کے ایک طرف پٹی کی شکل میں چھالے", "پانی بھرے دردناک دانے", "جلد میں جلن اور سوئیاں چبھنا", "چھونے پر شدید درد"],
+    "secondary_ur": ["ہلکا بخار اور سر درد", "چھالوں پر پپڑی جمنا", "عصبی درد کی شدت"],
+    "modifiers_ur": ["ایک ہی طرف کا دانہ", "شدید جلن دار درد", "چھالوں کا بننا"],
+    "sources": ["CDC Shingles Clinical Overview", "Mayo Clinic Infectious Diseases", "NHS"]
+  },
+  "Skin Allergy": {
+    "domain": "Dermatology / Allergy",
+    "primary_en": ["itchy red skin rash", "hives", "welts on skin", "contact redness", "swelling of affected area"],
+    "secondary_en": ["burning skin irritation", "small bumps on skin", "dry flaky skin patches", "warmth in rash area"],
+    "modifiers_en": ["after contact with allergen", "sudden hives flare", "acute allergic reaction"],
+    "primary_ur": ["جلد پر خارش اور لالی", "جسم پر پتی اچھلنا", "چھپاکی اور الرجی کے سرخ نشان", "جلد پر سوجن اور کھجلی"],
+    "secondary_ur": ["جلد کا جلنا", "چھوٹے چھوٹے دانے بننا", "کھجانے پر سرخی بڑھنا"],
+    "modifiers_ur": ["کسی چیز سے الرجی کے بعد", "اچانک دانے نکلنا", "شدید کھجلی"],
+    "sources": ["AAAAI Skin Allergy Guidance", "Mayo Clinic Allergy Center", "NHS"]
+  },
+  "Stroke": {
+    "domain": "Neurology / Critical Emergency",
+    "primary_en": ["sudden facial drooping", "arm weakness or numbness on one side", "slurred speech", "difficulty speaking or understanding", "sudden loss of balance"],
+    "secondary_en": ["sudden vision problems in one eye", "severe sudden headache with no cause", "dizziness and confusion", "inability to lift one arm"],
+    "modifiers_en": ["FAST emergency criteria", "unilateral sudden paralysis", "acute neurological deficit"],
+    "primary_ur": ["چہرے کا ایک طرف ٹیڑھا ہونا", "ایک بازو یا ٹانگ کا بے جان ہونا", "بولنے میں زبان لڑکھڑانا", "اچانک توازن بگڑنا اور چکر آنا"],
+    "secondary_ur": ["آنکھوں کے آگے اچانک اندھیرا چھانا", "شدید اچانک سر درد", "بات سمجھنے میں مشکل ہونا"],
+    "modifiers_ur": ["فالج کا اچانک حملہ", "جسم کا ایک حصہ سن ہونا", "فوری ایمرجنسی"],
+    "sources": ["AHA/ASA Stroke Clinical Guidelines", "CDC Stroke Symptoms Protocol", "Mayo Clinic"]
+  },
+  "Tonsillitis": {
+    "domain": "ENT / Infectious",
+    "primary_en": ["severe sore throat", "painful difficult swallowing", "red swollen tonsils", "white patches or pus on tonsils", "fever"],
+    "secondary_en": ["swollen lymph nodes in neck", "muffled voice", "bad breath", "ear pain related to throat", "headache"],
+    "modifiers_en": ["difficulty swallowing even liquids", "tender cervical nodes", "acute"],
+    "primary_ur": ["گلے میں شدید درد اور سوزش", "ٹانسلز کا پھولنا اور سرخ ہونا", "تھوک یا پانی نگلنے میں شدید تکلیف", "ٹانسلز پر سفید پیپ کے دھبے", "بخار"],
+    "secondary_ur": ["گردن کی گلٹیوں میں سوجن", "آواز بیٹھ جانا", "کان میں درد ہونا"],
+    "modifiers_ur": ["نگلنے میں تکلیف", "گلے کی شدید خرابی", "ٹانسلز پک جانا"],
+    "sources": ["AAO-HNS Tonsillitis Guidance", "Mayo Clinic ENT", "NHS"]
+  },
+  "Tuberculosis": {
+    "domain": "Pulmonology / Infectious",
+    "primary_en": ["cough lasting more than three weeks", "coughing up blood or bloody sputum", "drenching night sweats", "unintentional weight loss", "fever"],
+    "secondary_en": ["chest pain with breathing", "constant fatigue and weakness", "loss of appetite", "chills"],
+    "modifiers_en": ["chronic prolonged cough", "profuse nocturnal sweating", "progressive wasting"],
+    "primary_ur": ["تین ہفتوں سے زیادہ پرانی کھانسی", "کھانسی میں خون یا خونی بلغم آنا", "رات کو شدید پسینے آنا", "بغیر وجہ تیزی سے وزن کم ہونا", "ہلکا بخار"],
+    "secondary_ur": ["سینے میں درد", "ہر وقت نڈھال رہنا", "بھوک نہ لگنا اور سوکھنا"],
+    "modifiers_ur": ["کئی ہفتوں سے کھانسی", "رات کے پسینے", "پرانی ٹی بی"],
+    "sources": ["WHO Tuberculosis Clinical Management", "CDC TB Guidance", "Mayo Clinic"]
+  },
+  "Typhoid": {
+    "domain": "Infectious / Tropical",
+    "primary_en": ["step-ladder progressive high fever", "severe stomach pain", "headache", "extreme weakness and exhaustion", "rose spots rash on chest abdomen"],
+    "secondary_en": ["constipation or pea soup diarrhea", "loss of appetite", "slow heart rate relative to fever", "delirium in severe cases"],
+    "modifiers_en": ["prolonged persistent fever", "stepwise daily temperature rise", "enteric fever"],
+    "primary_ur": ["روزانہ چڑھنے والا تیز میعادی بخار", "پیٹ میں شدید درد", "شدید سر درد اور بے تحاشا کمزوری", "سینے اور پیٹ پر ہلکے گلابی دانے"],
+    "secondary_ur": ["قبض یا پتلے دست", "بھوک کا مکمل خاتمہ", "غنودگی اور تھکن"],
+    "modifiers_ur": ["میعادی بخار", "تیز تپ نہ اترنا", "کئی دنوں سے بخار"],
+    "sources": ["WHO Typhoid Guidance", "CDC Typhoid Fever Monograph", "Mayo Clinic"]
+  },
+  "UTI": {
+    "domain": "Urology / Infectious",
+    "primary_en": ["burning pain during urination", "dysuria", "frequent intense urge to urinate", "cloudy dark or strong-smelling urine", "pelvic lower abdominal pain"],
+    "secondary_en": ["passing small amounts of urine frequently", "trace blood in urine", "low-grade fever", "feeling bladder not emptying"],
+    "modifiers_en": ["sharp burning dysuria", "urgent frequent voiding", "lower pelvic cramping"],
+    "primary_ur": ["پیشاب کرتے وقت شدید جلن اور درد", "بار بار پیشاب کی حاجت ہونا", "پیشاب کا گدلا یا تیز بو والا ہونا", "پیٹ کے نچلے حصے اور مثانے میں درد"],
+    "secondary_ur": ["قطرہ قطرہ پیشاب آنا", "پیشاب میں سرخی یا خون کا شائبہ", "ہلکا بخار اور بے چینی"],
+    "modifiers_ur": ["پیشاب میں شدید جلن", "بار بار جانا", "مثانے میں سوزش"],
+    "sources": ["AUA/CUA/SUFU Recurrent UTI Guidelines", "CDC Urinary Tract Infection Overview", "Mayo Clinic"]
+  }
+}

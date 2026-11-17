@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input }  from "@/components/ui/input";
 import { toast }  from "sonner";
 
-const API = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const TRIAGE_COLORS: Record<string, string> = {
   Low:    "#10b981",
@@ -122,10 +122,13 @@ const AdminDashboard = () => {
   const fetchData = useCallback(async (key: string) => {
     setLoading(true);
     try {
-      // Both endpoints now use admin_key= (matches app.py exactly)
+      const authHeaders = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${key}`,
+      };
       const [aRes, uRes] = await Promise.all([
-        fetch(`${API}/admin/analytics?admin_key=${encodeURIComponent(key)}`),
-        fetch(`${API}/admin/users?admin_key=${encodeURIComponent(key)}`),
+        fetch(`${API}/admin/analytics?admin_key=${encodeURIComponent(key)}`, { headers: authHeaders }),
+        fetch(`${API}/admin/users?admin_key=${encodeURIComponent(key)}`, { headers: authHeaders }),
       ]);
 
       // If auth fails, clear the stored key and show login again
