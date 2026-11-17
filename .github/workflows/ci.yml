@@ -40,7 +40,8 @@ jobs:
       - name: Run Full Backend Automated Test Suite
         working-directory: Backend
         run: |
-          python -m unittest discover -s tests -p "test_*.py" -v
+          set -o pipefail
+          python -m unittest discover -s tests -p "test_*.py" -v 2>&1 | tee test_results.log || (echo "### ❌ Test Suite Failure Log" >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && cat test_results.log >> $GITHUB_STEP_SUMMARY && echo '```' >> $GITHUB_STEP_SUMMARY && exit 1)
 
       - name: Validate Alembic Database Migrations
         working-directory: Backend
