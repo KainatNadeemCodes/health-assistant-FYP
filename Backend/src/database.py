@@ -1,131 +1,294 @@
 """
 FILE: src/database.py
-PURPOSE: SQLite Persistence Layer for Users, Consultations, and Feedback
-VERSION: 2.0  |  GROUP: F25PROJECT664B0
+PURPOSE: Enterprise Dual-Engine Persistence Layer (SQLite & PostgreSQL) via SQLAlchemy 2.0
+VERSION: 3.0  |  GROUP: F25PROJECT664B0
 SUPERVISOR: Shakeel Saeed
 
-This module is the "Source of Truth" for the entire application. Everything
-that needs to be remembered between sessions lives here — user accounts,
-consultation history, feedback ratings, and the analytics data the admin
-dashboard relies on.
+This module provides a robust, decoupled data persistence layer supporting both:
+  1. Local zero-config development (SQLite with WAL mode and PRAGMA foreign keys)
+  2. Production deployment (PostgreSQL / AWS RDS / GCP Cloud SQL via DATABASE_URL)
 
-Changes in v2.0:
-  - Added get_analytics_summary()  → feeds AdminDashboard charts
-  - Added get_all_users_admin()    → feeds AdminDashboard user table
-  - Added update_user_role()       → RBAC role management from admin panel
-  All three were imported by app.py but missing here — causing ImportError on startup.
+Architecture:
+  - Declarative SQLAlchemy 2.0 ORM models with strong type annotations.
+  - Connection pooling with pre-ping validation (`pool_pre_ping=True`).
+  - Thread-safe session management via context-managed sessions.
+  - Full backward compatibility for all existing service and test callers.
 """
 
-import sqlite3
-import hashlib
-import logging
-import json
 import os
-from datetime import datetime
-from typing import Optional
-from src.security import hash_password as secure_hash_password, verify_password as secure_verify_password
+import logging
+from datetime import datetime, timezone
+from typing import Optional, List, Dict, Any
+from contextlib import contextmanager
+
+from sqlalchemy import (
+    create_engine,
+    select,
+    func,
+    desc,
+    event,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    ForeignKey,
+    CheckConstraint,
+    Engine,
+)
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    mapped_column,
+    relationship,
+    sessionmaker,
+    Session,
+)
+from sqlalchemy.exc import IntegrityError
+
+try:
+    from src.security import (
+        hash_password as secure_hash_password,
+        verify_password as secure_verify_password,
+    )
+except ImportError:
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from src.security import (
+        hash_password as secure_hash_password,
+        verify_password as secure_verify_password,
+    )
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 log = logging.getLogger(__name__)
 
-# ── Config ────────────────────────────────────────────────────────────────────
-# Robust path resolution regardless of working directory
+# ── Config & URL Resolution ───────────────────────────────────────────────────
 DEFAULT_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "health_assistant.db")
-DB_PATH: str = os.path.abspath(os.getenv("DATABASE_PATH", DEFAULT_DB_FILE))
 
 # Defined user roles
 ROLE_GUEST   = "Guest"
 ROLE_PATIENT = "Patient"
 ROLE_ADMIN   = "Admin"
 VALID_ROLES  = {ROLE_GUEST, ROLE_PATIENT, ROLE_ADMIN}
-
 VALID_GENDERS = {"Male", "Female", "Other", "Prefer not to say"}
 
 
-# ===========================================================================
-# DATABASE ENGINE
-# ===========================================================================
-
-def get_connection(path: str = DB_PATH) -> sqlite3.Connection:
+def resolve_database_url(custom_target: Optional[str] = None) -> str:
     """
-    Opens a thread-safe SQLite connection with WAL mode enabled.
-    WAL = Write-Ahead Logging → multiple readers + one writer can work at the
-    same time without blocking each other. Essential for FastAPI's async nature.
+    Resolves the active database connection string.
+    Priority:
+      1. Explicit function argument (file path or URI)
+      2. Environment variable DATABASE_URL (production)
+      3. Environment variable DATABASE_PATH (custom SQLite path)
+      4. Default local SQLite file path
     """
-    conn = sqlite3.connect(path, check_same_thread=False)
-    conn.row_factory = sqlite3.Row  # lets us do row["email"] instead of row[0]
-    conn.execute("PRAGMA foreign_keys = ON")
-    conn.execute("PRAGMA journal_mode = WAL")
-    return conn
+    target = custom_target or os.getenv("DATABASE_URL")
+    if target:
+        # Standard cloud compatibility: rewrite legacy postgres:// to postgresql://
+        if target.startswith("postgres://"):
+            target = target.replace("postgres://", "postgresql://", 1)
+        if "://" in target:
+            return target
+        # If it's a file path provided in target
+        return f"sqlite:///{os.path.abspath(target)}"
+
+    sqlite_path = os.getenv("DATABASE_PATH", DEFAULT_DB_FILE)
+    return f"sqlite:///{os.path.abspath(sqlite_path)}"
 
 
-def init_db(path: str = DB_PATH) -> None:
+# Global Engine and Session Factory State
+_ENGINE: Optional[Engine] = None
+_SESSION_FACTORY: Optional[sessionmaker] = None
+
+
+def close_engine():
+    """Closes and disposes of the connection pool, releasing file locks."""
+    global _ENGINE, _SESSION_FACTORY
+    if _ENGINE is not None:
+        _ENGINE.dispose()
+        _ENGINE = None
+        _SESSION_FACTORY = None
+
+
+def get_engine(db_url: Optional[str] = None) -> Engine:
     """
-    Initializes all tables. Safe to call on every startup because
-    we use 'IF NOT EXISTS' — no data gets wiped.
-
-    Tables created:
-      users         → accounts and profiles
-      consultations → AI prediction history
-      feedback      → user ratings per consultation
+    Returns or lazily initializes the singleton SQLAlchemy Engine.
+    Configures SQLite with WAL mode and foreign key enforcement.
     """
-    parent_dir = os.path.dirname(os.path.abspath(path))
-    os.makedirs(parent_dir, exist_ok=True)
+    global _ENGINE, _SESSION_FACTORY
+    target_url = resolve_database_url(db_url)
 
-    conn = get_connection(path)
+    # Recreate engine if URL changes (e.g. during test suite isolation)
+    if _ENGINE is not None:
+        current_url = str(_ENGINE.url)
+        if current_url == target_url:
+            return _ENGINE
+
+    is_sqlite = target_url.startswith("sqlite")
+    engine_kwargs: Dict[str, Any] = {
+        "pool_pre_ping": True,
+    }
+
+    if is_sqlite:
+        engine_kwargs["connect_args"] = {"check_same_thread": False}
+
+    _ENGINE = create_engine(target_url, **engine_kwargs)
+
+    # Enable WAL mode and Foreign Keys for SQLite
+    if is_sqlite:
+        @event.listens_for(_ENGINE, "connect")
+        def set_sqlite_pragma(dbapi_connection, connection_record):
+            cursor = dbapi_connection.cursor()
+            try:
+                cursor.execute("PRAGMA foreign_keys = ON")
+                cursor.execute("PRAGMA journal_mode = WAL")
+            except Exception as e:
+                log.debug(f"SQLite PRAGMA setup note: {e}")
+            finally:
+                cursor.close()
+
+    _SESSION_FACTORY = sessionmaker(autocommit=False, autoflush=False, bind=_ENGINE)
+    return _ENGINE
+
+
+def get_session_factory() -> sessionmaker:
+    """Returns the current sessionmaker, ensuring the engine is initialized."""
+    global _SESSION_FACTORY
+    if _SESSION_FACTORY is None:
+        get_engine()
+    return _SESSION_FACTORY
+
+
+@contextmanager
+def get_db():
+    """Context manager for thread-safe database sessions with automatic rollback."""
+    session_cls = get_session_factory()
+    session: Session = session_cls()
     try:
-        cur = conn.cursor()
-
-        # --- 1. Users ---
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS users (
-                id            INTEGER PRIMARY KEY AUTOINCREMENT,
-                username      TEXT    NOT NULL,
-                email         TEXT    NOT NULL UNIQUE,
-                password_hash TEXT    NOT NULL,
-                age           INTEGER,
-                gender        TEXT,
-                role          TEXT    NOT NULL DEFAULT 'Patient'
-                                      CHECK (role IN ('Guest', 'Patient')),
-                created_at    TEXT    NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-
-        # --- 2. Consultations ---
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS consultations (
-                id           INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id      INTEGER REFERENCES users(id) ON DELETE SET NULL,
-                symptoms     TEXT    NOT NULL,
-                prediction   TEXT    NOT NULL,
-                triage_level TEXT    NOT NULL
-                                     CHECK (triage_level IN ('Low','Medium','High')),
-                specialist   TEXT    NOT NULL DEFAULT 'General Physician',
-                timestamp    TEXT    NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-
-        # --- 3. Feedback ---
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS feedback (
-                id         INTEGER PRIMARY KEY AUTOINCREMENT,
-                consult_id INTEGER NOT NULL UNIQUE
-                                   REFERENCES consultations(id) ON DELETE CASCADE,
-                rating     INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-                comments   TEXT,
-                created_at TEXT    NOT NULL DEFAULT (datetime('now'))
-            )
-        """)
-
-        # Performance indexes
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)")
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_consults_user ON consultations(user_id)")
-        cur.execute("CREATE INDEX IF NOT EXISTS idx_consults_time ON consultations(timestamp)")
-
-        conn.commit()
-        log.info(f"Database ready at: {path}")
+        yield session
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
     finally:
-        conn.close()
+        session.close()
+
+
+def get_connection(path: Optional[str] = None):
+    """
+    Backward-compatible connection accessor for legacy callers.
+    Returns a raw DBAPI connection.
+    """
+    eng = get_engine(path)
+    return eng.raw_connection()
+
+
+# ===========================================================================
+# DECLARATIVE ORM MODELS
+# ===========================================================================
+
+class Base(DeclarativeBase):
+    """Base class for all SQLAlchemy declarative tables."""
+    pass
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(String(100), nullable=False)
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    age: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    gender: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, default=ROLE_PATIENT)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        CheckConstraint("role IN ('Guest', 'Patient', 'Admin')", name="ck_users_role"),
+    )
+
+    consultations = relationship("Consultation", back_populates="user", cascade="all, delete-orphan")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "age": self.age,
+            "gender": self.gender,
+            "role": self.role,
+            "created_at": self.created_at.isoformat() if hasattr(self.created_at, "isoformat") else str(self.created_at),
+        }
+
+
+class Consultation(Base):
+    __tablename__ = "consultations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    symptoms: Mapped[str] = mapped_column(Text, nullable=False)
+    prediction: Mapped[str] = mapped_column(String(100), nullable=False)
+    triage_level: Mapped[str] = mapped_column(String(20), nullable=False)
+    specialist: Mapped[str] = mapped_column(String(100), nullable=False, default="General Physician")
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc), index=True)
+
+    __table_args__ = (
+        CheckConstraint("triage_level IN ('Low', 'Medium', 'High')", name="ck_consult_triage"),
+    )
+
+    user = relationship("User", back_populates="consultations")
+    feedback = relationship("Feedback", back_populates="consultation", uselist=False, cascade="all, delete-orphan")
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "symptoms": self.symptoms,
+            "prediction": self.prediction,
+            "triage_level": self.triage_level,
+            "specialist": self.specialist,
+            "timestamp": self.timestamp.isoformat() if hasattr(self.timestamp, "isoformat") else str(self.timestamp),
+        }
+
+
+class Feedback(Base):
+    __tablename__ = "feedback"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    consult_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("consultations.id", ondelete="CASCADE"), unique=True, nullable=False
+    )
+    rating: Mapped[int] = mapped_column(Integer, nullable=False)
+    comments: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+
+    __table_args__ = (
+        CheckConstraint("rating >= 1 AND rating <= 5", name="ck_feedback_rating"),
+    )
+
+    consultation = relationship("Consultation", back_populates="feedback")
+
+
+# ===========================================================================
+# DATABASE INITIALIZATION
+# ===========================================================================
+
+def init_db(path: Optional[str] = None) -> None:
+    """
+    Initializes all database tables. Safe to call on application startup.
+    Supports both SQLite file paths and PostgreSQL connection strings.
+    """
+    eng = get_engine(path)
+    # Ensure directory exists for local SQLite files
+    if str(eng.url).startswith("sqlite"):
+        db_path = eng.url.database
+        if db_path and db_path != ":memory:":
+            os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
+
+    Base.metadata.create_all(bind=eng)
+    log.info(f"Database schema initialized successfully on: {eng.url.render_as_string(hide_password=True)}")
 
 
 # ===========================================================================
@@ -150,65 +313,61 @@ def register_user(
     username: str,
     email: str,
     password: str,
-    age: int = None,
-    gender: str = None,
+    age: Optional[int] = None,
+    gender: Optional[str] = None,
     role: str = ROLE_PATIENT,
 ) -> Optional[dict]:
     """
     Creates a new user account.
-    Returns the user object on success, or None if the email is already taken.
+    Returns the user profile on success, or None if the email is already registered.
     """
     if not email or "@" not in email:
         raise ValueError("A valid email address is required.")
 
     p_hash = _hash_password(password)
-    conn   = get_connection()
-    user_id = None
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO users (username, email, password_hash, age, gender, role) VALUES (?,?,?,?,?,?)",
-            (username.strip(), email.strip().lower(), p_hash, age, gender, role),
-        )
-        conn.commit()
-        user_id = cur.lastrowid
-    except sqlite3.IntegrityError:
-        log.warning(f"Registration failed — email already exists: {email}")
-        return None
-    finally:
-        conn.close()
+    clean_email = email.strip().lower()
 
-    if user_id:
-        return login_user(email, password)
-    return None
+    try:
+        with get_db() as session:
+            new_user = User(
+                username=username.strip(),
+                email=clean_email,
+                password_hash=p_hash,
+                age=age,
+                gender=gender,
+                role=role,
+            )
+            session.add(new_user)
+            session.flush()
+    except IntegrityError:
+        log.warning(f"Registration failed — email already exists: {clean_email}")
+        return None
+
+    return login_user(clean_email, password)
 
 
 def login_user(email: str, password: str) -> Optional[dict]:
     """
-    Authenticates a user. Returns their profile dict (no password hash included)
-    or None if credentials are wrong.
-    If the stored password was hashed with legacy unsalted SHA-256, automatically
-    upgrades it to salted PBKDF2-SHA256 upon successful verification.
+    Authenticates a user. Returns their profile dict (password hash omitted)
+    or None if credentials are invalid.
+    Automatically upgrades legacy SHA-256 hashes to salted PBKDF2 upon success.
     """
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE email = ?", (email.strip().lower(),))
-        row = cur.fetchone()
+    clean_email = email.strip().lower()
 
-        if row and _verify_password(password, row["password_hash"]):
-            # Auto-upgrade legacy hash if needed
-            if not row["password_hash"].startswith("pbkdf2_"):
-                new_hash = _hash_password(password)
-                cur.execute("UPDATE users SET password_hash = ? WHERE id = ?", (new_hash, row["id"]))
-                conn.commit()
+    with get_db() as session:
+        user = session.execute(
+            select(User).where(User.email == clean_email)
+        ).scalar_one_or_none()
 
-            user_data = dict(row)
-            del user_data["password_hash"]  # never send this to the frontend
+        if user and _verify_password(password, user.password_hash):
+            if not user.password_hash.startswith("pbkdf2_"):
+                user.password_hash = _hash_password(password)
+                session.flush()
+
+            user_data = user.to_dict()
             return user_data
-        return None
-    finally:
-        conn.close()
+
+    return None
 
 
 # ===========================================================================
@@ -216,181 +375,165 @@ def login_user(email: str, password: str) -> Optional[dict]:
 # ===========================================================================
 
 def save_consultation(
-    symptoms:   str,
+    symptoms: str,
     prediction: str,
-    triage:     str,
+    triage: str,
     specialist: str,
-    user_id:    Optional[int] = None,
+    user_id: Optional[int] = None,
 ) -> int:
     """
     Saves an AI consultation result to the database.
-    Works for both registered users (user_id set) and guests (user_id=None).
-
-    The triage param must be 'Low', 'Medium', or 'High' — the DB CHECK constraint
-    enforces this. The /predict endpoint maps frontend values before calling here.
+    Works for registered users and guests (user_id=None).
     """
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            """INSERT INTO consultations (user_id, symptoms, prediction, triage_level, specialist)
-               VALUES (?, ?, ?, ?, ?)""",
-            (user_id, symptoms, prediction, triage, specialist),
+    with get_db() as session:
+        consultation = Consultation(
+            user_id=user_id,
+            symptoms=symptoms,
+            prediction=prediction,
+            triage_level=triage,
+            specialist=specialist,
         )
-        conn.commit()
-        return cur.lastrowid
-    finally:
-        conn.close()
+        session.add(consultation)
+        session.flush()
+        return consultation.id
 
 
-def fetch_history(user_id: int, limit: int = 10) -> list:
+def fetch_history(user_id: int, limit: int = 10) -> List[dict]:
     """
     Pulls the most recent [limit] consultations for a registered user.
-    Called by the Dashboard page when a logged-in user wants to see their history.
     """
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT * FROM consultations WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?",
-            (user_id, limit),
-        )
-        return [dict(row) for row in cur.fetchall()]
-    finally:
-        conn.close()
+    with get_db() as session:
+        results = session.execute(
+            select(Consultation)
+            .where(Consultation.user_id == user_id)
+            .order_by(desc(Consultation.timestamp))
+            .limit(limit)
+        ).scalars().all()
+
+        return [c.to_dict() for c in results]
 
 
 # ===========================================================================
 # FEEDBACK
 # ===========================================================================
 
-def save_feedback(consult_id: int, rating: int, comments: str = None) -> Optional[int]:
+def save_feedback(consult_id: int, rating: int, comments: Optional[str] = None) -> Optional[int]:
     """
-    UC-08: Saves user feedback (1–5 star rating) for a consultation.
+    Saves user feedback (1–5 star rating) for a consultation.
     Returns the new feedback ID, or None if feedback already exists for this consult.
     """
     if not (1 <= rating <= 5):
         raise ValueError("Rating must be between 1 and 5.")
 
-    conn = get_connection()
     try:
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO feedback (consult_id, rating, comments) VALUES (?, ?, ?)",
-            (consult_id, rating, comments),
-        )
-        conn.commit()
-        return cur.lastrowid
-    except sqlite3.IntegrityError:
-        # The UNIQUE constraint on consult_id means one feedback per consultation
+        with get_db() as session:
+            feedback = Feedback(
+                consult_id=consult_id,
+                rating=rating,
+                comments=comments,
+            )
+            session.add(feedback)
+            session.flush()
+            return feedback.id
+    except IntegrityError:
         log.warning(f"Duplicate feedback attempt for consult_id={consult_id}")
         return None
-    finally:
-        conn.close()
 
 
 # ===========================================================================
-# ADMIN FUNCTIONS — These were missing in v1 and caused ImportError on startup
+# ADMIN FUNCTIONS
 # ===========================================================================
 
 def get_analytics_summary() -> dict:
     """
     Aggregates anonymized stats for the admin analytics dashboard.
-
-    Returns:
-      total_consultations  → headline stat card
-      total_users          → headline stat card
-      avg_rating           → headline stat card (from feedback table)
-      total_feedback       → how many users left ratings
-      triage_distribution  → {"Low": 12, "Medium": 7, "High": 3} for pie chart
-      top_conditions       → [{"prediction": str, "count": int}] for bar chart
-      top_specialists      → [{"specialist": str, "count": int}] for bar chart
-      daily_activity       → [{"date": str, "count": int}] for 14-day line chart
-      recent_consultations → last 10 rows for the "Knowledge Base" review table
-                             (symptoms are truncated to 80 chars — no full PII exposure)
+    Compatible across SQLite and PostgreSQL.
     """
-    conn = get_connection()
     try:
-        cur = conn.cursor()
+        with get_db() as session:
+            total_consultations = session.execute(
+                select(func.count(Consultation.id))
+            ).scalar_one() or 0
 
-        # --- Headline metrics ---
-        cur.execute("SELECT COUNT(*) FROM consultations")
-        total_consultations = cur.fetchone()[0]
+            total_users = session.execute(
+                select(func.count(User.id))
+            ).scalar_one() or 0
 
-        cur.execute("SELECT COUNT(*) FROM users")
-        total_users = cur.fetchone()[0]
+            fb_stats = session.execute(
+                select(func.count(Feedback.id), func.avg(Feedback.rating))
+            ).one()
+            total_feedback = fb_stats[0] or 0
+            avg_rating = round(float(fb_stats[1]), 1) if fb_stats[1] is not None else 0.0
 
-        cur.execute("SELECT COUNT(*), ROUND(AVG(rating), 1) FROM feedback")
-        fb_row            = cur.fetchone()
-        total_feedback    = fb_row[0] or 0
-        avg_rating        = fb_row[1] or 0.0
+            # Triage distribution
+            triage_rows = session.execute(
+                select(Consultation.triage_level, func.count(Consultation.id))
+                .group_by(Consultation.triage_level)
+            ).all()
+            triage_distribution = {row[0]: row[1] for row in triage_rows}
 
-        # --- Triage distribution for pie chart ---
-        cur.execute("""
-            SELECT triage_level, COUNT(*) as cnt
-            FROM consultations
-            GROUP BY triage_level
-        """)
-        triage_distribution = {row["triage_level"]: row["cnt"] for row in cur.fetchall()}
+            # Top 10 predicted conditions
+            top_cond_rows = session.execute(
+                select(Consultation.prediction, func.count(Consultation.id).label("cnt"))
+                .group_by(Consultation.prediction)
+                .order_by(desc("cnt"))
+                .limit(10)
+            ).all()
+            top_conditions = [{"prediction": r[0], "count": r[1]} for r in top_cond_rows]
 
-        # --- Top 10 predicted conditions for bar chart ---
-        cur.execute("""
-            SELECT prediction, COUNT(*) as cnt
-            FROM consultations
-            GROUP BY prediction
-            ORDER BY cnt DESC
-            LIMIT 10
-        """)
-        top_conditions = [{"prediction": r["prediction"], "count": r["cnt"]} for r in cur.fetchall()]
+            # Top specialists
+            top_spec_rows = session.execute(
+                select(Consultation.specialist, func.count(Consultation.id).label("cnt"))
+                .where(Consultation.specialist.isnot(None), Consultation.specialist != "")
+                .group_by(Consultation.specialist)
+                .order_by(desc("cnt"))
+                .limit(10)
+            ).all()
+            top_specialists = [{"specialist": r[0], "count": r[1]} for r in top_spec_rows]
 
-        # --- Top specialists demanded ---
-        cur.execute("""
-            SELECT specialist, COUNT(*) as cnt
-            FROM consultations
-            WHERE specialist IS NOT NULL AND specialist != ''
-            GROUP BY specialist
-            ORDER BY cnt DESC
-            LIMIT 10
-        """)
-        top_specialists = [{"specialist": r["specialist"], "count": r["cnt"]} for r in cur.fetchall()]
+            # Daily activity (last 14 days)
+            # func.cast or func.date works cross-dialect
+            date_col = func.date(Consultation.timestamp)
+            daily_rows = session.execute(
+                select(date_col.label("day"), func.count(Consultation.id).label("cnt"))
+                .group_by("day")
+                .order_by("day")
+                .limit(14)
+            ).all()
+            daily_activity = [{"date": str(r[0]), "count": r[1]} for r in daily_rows]
 
-        # --- Daily activity: last 14 days ---
-        cur.execute("""
-            SELECT DATE(timestamp) as date, COUNT(*) as cnt
-            FROM consultations
-            WHERE DATE(timestamp) >= DATE('now', '-14 days')
-            GROUP BY DATE(timestamp)
-            ORDER BY date ASC
-        """)
-        daily_activity = [{"date": r["date"], "count": r["cnt"]} for r in cur.fetchall()]
+            # Recent consultations
+            recent_rows = session.execute(
+                select(Consultation)
+                .order_by(desc(Consultation.timestamp))
+                .limit(10)
+            ).scalars().all()
 
-        # --- Recent consultations for knowledge base review ---
-        # Symptoms are truncated to avoid exposing full patient input in the dashboard
-        cur.execute("""
-            SELECT c.id, c.prediction, c.triage_level, c.specialist,
-                   c.timestamp,
-                   SUBSTR(c.symptoms, 1, 80) as symptoms_preview
-            FROM consultations c
-            ORDER BY c.timestamp DESC
-            LIMIT 10
-        """)
-        recent_consultations = [dict(row) for row in cur.fetchall()]
+            recent_consultations = [
+                {
+                    "id": c.id,
+                    "prediction": c.prediction,
+                    "triage_level": c.triage_level,
+                    "specialist": c.specialist,
+                    "timestamp": c.timestamp.isoformat() if hasattr(c.timestamp, "isoformat") else str(c.timestamp),
+                    "symptoms_preview": c.symptoms[:80] if c.symptoms else "",
+                }
+                for c in recent_rows
+            ]
 
-        return {
-            "total_consultations":  total_consultations,
-            "total_users":          total_users,
-            "avg_rating":           avg_rating,
-            "total_feedback":       total_feedback,
-            "triage_distribution":  triage_distribution,
-            "top_conditions":       top_conditions,
-            "top_specialists":      top_specialists,
-            "daily_activity":       daily_activity,
-            "recent_consultations": recent_consultations,
-        }
-
+            return {
+                "total_consultations":  total_consultations,
+                "total_users":          total_users,
+                "avg_rating":           avg_rating,
+                "total_feedback":       total_feedback,
+                "triage_distribution":  triage_distribution,
+                "top_conditions":       top_conditions,
+                "top_specialists":      top_specialists,
+                "daily_activity":       daily_activity,
+                "recent_consultations": recent_consultations,
+            }
     except Exception as e:
         log.error(f"get_analytics_summary failed: {e}")
-        # Return empty structure instead of crashing the admin dashboard
         return {
             "total_consultations":  0,
             "total_users":          0,
@@ -402,61 +545,62 @@ def get_analytics_summary() -> dict:
             "daily_activity":       [],
             "recent_consultations": [],
         }
-    finally:
-        conn.close()
 
 
-def get_all_users_admin() -> list:
+def get_all_users_admin() -> List[dict]:
     """
-    Returns anonymized user list for the admin panel user table.
-    Password hashes are stripped. Sensitive health data is NOT included.
-    Only basic account metadata and consultation count are returned.
-    This satisfies SRS NFR-4 (Security) — admin can see users but not their medical records.
+    Returns sanitized user list with consultation counts for the admin dashboard.
     """
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT
-                u.id,
-                u.username,
-                u.email,
-                u.role,
-                u.age,
-                u.gender,
-                u.created_at,
-                COUNT(c.id) as consultation_count
-            FROM users u
-            LEFT JOIN consultations c ON c.user_id = u.id
-            GROUP BY u.id
-            ORDER BY u.created_at DESC
-        """)
-        return [dict(row) for row in cur.fetchall()]
-    finally:
-        conn.close()
+    with get_db() as session:
+        rows = session.execute(
+            select(
+                User.id,
+                User.username,
+                User.email,
+                User.role,
+                User.age,
+                User.gender,
+                User.created_at,
+                func.count(Consultation.id).label("consultation_count"),
+            )
+            .outerjoin(Consultation, Consultation.user_id == User.id)
+            .group_by(User.id)
+            .order_by(desc(User.created_at))
+        ).all()
+
+        return [
+            {
+                "id": r[0],
+                "username": r[1],
+                "email": r[2],
+                "role": r[3],
+                "age": r[4],
+                "gender": r[5],
+                "created_at": r[6].isoformat() if hasattr(r[6], "isoformat") else str(r[6]),
+                "consultation_count": r[7],
+            }
+            for r in rows
+        ]
 
 
 def update_user_role(user_id: int, new_role: str) -> bool:
     """
-    RBAC: Allows admin to change a user's role (Guest ↔ Patient).
-    Returns True if the user was found and updated, False if user_id doesn't exist.
-    Called by POST /admin/users/{user_id}/role in app.py.
+    Allows admin to update a user's role.
     """
     if new_role not in VALID_ROLES:
         raise ValueError(f"Invalid role '{new_role}'. Must be one of: {VALID_ROLES}")
 
-    conn = get_connection()
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE users SET role = ? WHERE id = ?",
-            (new_role, user_id),
-        )
-        conn.commit()
-        # rowcount tells us if the UPDATE actually matched anything
-        return cur.rowcount > 0
-    finally:
-        conn.close()
+    with get_db() as session:
+        user = session.execute(
+            select(User).where(User.id == user_id)
+        ).scalar_one_or_none()
+
+        if not user:
+            return False
+
+        user.role = new_role
+        session.flush()
+        return True
 
 
 # ===========================================================================
@@ -464,10 +608,35 @@ def update_user_role(user_id: int, new_role: str) -> bool:
 # ===========================================================================
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    init_db("test_health.db")
-    print("Self-test: DB initialized OK.")
+    test_db = "test_health_phase4.db"
+    if os.path.exists(test_db):
+        os.remove(test_db)
+
+    init_db(test_db)
+    print("Self-test: DB initialized OK via SQLAlchemy.")
+
+    user = register_user("Test Doctor", "doctor@test.com", "SecurePass123!", role=ROLE_PATIENT)
+    print("Registered:", user)
+
+    login_res = login_user("doctor@test.com", "SecurePass123!")
+    print("Logged in:", login_res)
+
+    cid = save_consultation("fever, cough", "Flu", "Medium", "General Physician", user["id"])
+    print("Saved consultation ID:", cid)
+
+    fid = save_feedback(cid, 5, "Accurate triage!")
+    print("Saved feedback ID:", fid)
+
     summary = get_analytics_summary()
-    print(f"Analytics OK — {summary['total_consultations']} consultations in test DB.")
-    if os.path.exists("test_health.db"):
-        os.remove("test_health.db")
-    print("Cleanup done. All good.")
+    print("Analytics summary:", summary)
+
+    users_admin = get_all_users_admin()
+    print("Admin users:", users_admin)
+
+    updated = update_user_role(user["id"], ROLE_ADMIN)
+    print("Role updated:", updated)
+
+    close_engine()
+    if os.path.exists(test_db):
+        os.remove(test_db)
+    print("Cleanup done. All phase 4 database tests passed!")

@@ -23,7 +23,7 @@ from src.clinical_guardrails import (
 from src.triage import generate_triage
 from src.feature_extraction import load_vectorizer, transform_text
 from src.preprocessing import clean_text
-from src.database import init_db
+from src.database import init_db, close_engine
 
 
 class TestPhase3ClinicalGuardrails(unittest.TestCase):
@@ -41,6 +41,7 @@ class TestPhase3ClinicalGuardrails(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        close_engine()
         test_db = os.environ.get("DATABASE_PATH")
         if test_db and os.path.exists(test_db):
             try:

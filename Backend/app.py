@@ -26,6 +26,7 @@ FR Requirements hit: FR1, FR2, FR3, FR4, FR6, FR7, FR8, FR10, FR11,
 import io
 import os
 import shutil
+import asyncio
 import logging
 from typing import List, Optional
 
@@ -202,6 +203,37 @@ async def root():
 #   winget install ffmpeg
 # ===========================================================================
 
+def _transcode_and_transcribe_audio_worker(audio_bytes: bytes, google_lang: str) -> str:
+    """
+    Synchronous CPU/transcoding & network I/O worker.
+    Offloaded to asyncio.to_thread pool to guarantee the FastAPI event loop is never blocked.
+    """
+    import speech_recognition as sr
+    from pydub import AudioSegment
+
+    audio_io = io.BytesIO(audio_bytes)
+    try:
+        segment = AudioSegment.from_file(audio_io, format="webm")
+    except Exception:
+        try:
+            audio_io.seek(0)
+            segment = AudioSegment.from_file(audio_io, format="ogg")
+        except Exception:
+            audio_io.seek(0)
+            segment = AudioSegment.from_file(audio_io)  # auto-detect
+
+    # Convert to 16kHz mono WAV — optimal for Google Speech API
+    wav_io = io.BytesIO()
+    segment.set_frame_rate(16000).set_channels(1).export(wav_io, format="wav")
+    wav_io.seek(0)
+
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(wav_io) as source:
+        audio_data = recognizer.record(source)
+
+    return recognizer.recognize_google(audio_data, language=google_lang)
+
+
 @app.post("/voice-input")
 async def voice_input(
     audio: UploadFile = File(...),
@@ -209,15 +241,11 @@ async def voice_input(
 ):
     """
     Accepts a raw audio blob from the browser MediaRecorder API.
-    Transcribes it server-side using Google Speech Recognition.
-    The network call happens from our server — not from the browser —
-    so it bypasses whatever is blocking Chrome's SpeechRecognition on our ISP.
+    Transcribes it asynchronously via a thread pool worker using Google Speech Recognition.
+    Non-blocking: FastAPI remains fully responsive to other requests during transcoding and speech decoding.
 
     Returns: { "transcript": "patient's symptoms as text", "language": "en-US" }
     """
-    import speech_recognition as sr
-    from pydub import AudioSegment
-
     # Map short lang codes to Google's locale strings
     lang_map = {
         "en":    "en-US",
@@ -234,31 +262,12 @@ async def voice_input(
 
         log.info(f"Voice blob received: {len(audio_bytes)} bytes | lang={google_lang}")
 
-        # Chrome MediaRecorder sends WebM, Firefox sends OGG.
-        # pydub converts either format to WAV (16kHz mono) for speech_recognition.
-        # ffmpeg must be installed for pydub to do the conversion.
-        audio_io = io.BytesIO(audio_bytes)
-
-        try:
-            segment = AudioSegment.from_file(audio_io, format="webm")
-        except Exception:
-            try:
-                audio_io.seek(0)
-                segment = AudioSegment.from_file(audio_io, format="ogg")
-            except Exception:
-                audio_io.seek(0)
-                segment = AudioSegment.from_file(audio_io)  # let pydub auto-detect
-
-        # Convert to 16kHz mono WAV — optimal for Google Speech API
-        wav_io = io.BytesIO()
-        segment.set_frame_rate(16000).set_channels(1).export(wav_io, format="wav")
-        wav_io.seek(0)
-
-        recognizer = sr.Recognizer()
-        with sr.AudioFile(wav_io) as source:
-            audio_data = recognizer.record(source)
-
-        transcript = recognizer.recognize_google(audio_data, language=google_lang)
+        # Offload CPU audio transcoding + speech API call to worker thread
+        transcript = await asyncio.to_thread(
+            _transcode_and_transcribe_audio_worker,
+            audio_bytes,
+            google_lang,
+        )
 
         if not transcript or len(transcript.strip()) < 3:
             raise HTTPException(
@@ -269,22 +278,22 @@ async def voice_input(
         log.info(f"Transcription OK: '{transcript[:80]}'")
         return {"transcript": transcript.strip(), "language": google_lang}
 
-    except sr.UnknownValueError:
-        # Audio reached Google but they couldn't decode speech from it
-        raise HTTPException(
-            status_code=422,
-            detail="Could not understand the audio. Please speak clearly and try again."
-        )
-    except sr.RequestError as exc:
-        # Server-side network issue — rare since server internet works fine
-        log.error(f"Google Speech API unreachable: {exc}")
-        raise HTTPException(
-            status_code=503,
-            detail="Speech service unavailable. Please type your symptoms instead."
-        )
     except HTTPException:
         raise
     except Exception as exc:
+        exc_type = type(exc).__name__
+        if exc_type == "UnknownValueError":
+            # Audio reached Google but they couldn't decode speech from it
+            raise HTTPException(
+                status_code=422,
+                detail="Could not understand the audio. Please speak clearly and try again."
+            )
+        elif exc_type == "RequestError":
+            log.error(f"Google Speech API unreachable: {exc}")
+            raise HTTPException(
+                status_code=503,
+                detail="Speech service unavailable. Please type your symptoms instead."
+            )
         log.error(f"Voice input error: {exc}")
         raise HTTPException(
             status_code=500,

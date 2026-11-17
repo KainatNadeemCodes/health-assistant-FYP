@@ -23,7 +23,7 @@ from src.security import (
     create_access_token,
     decode_access_token,
 )
-from src.database import init_db
+from src.database import init_db, close_engine
 
 
 class TestPhase1SecurityAndAPI(unittest.TestCase):
@@ -41,6 +41,7 @@ class TestPhase1SecurityAndAPI(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        close_engine()
         test_db = os.environ.get("DATABASE_PATH")
         if test_db and os.path.exists(test_db):
             try:
