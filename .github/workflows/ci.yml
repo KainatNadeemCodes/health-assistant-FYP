@@ -32,17 +32,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r Backend/requirements.txt
 
-      - name: Run Full Backend Automated Test Suite
-        env:
-          ADMIN_SECRET: "ci_test_admin_secret_2025"
-          JWT_SECRET_KEY: "ci_jwt_secret_key"
+      - name: Train and Validate ML Model Artefacts
+        working-directory: Backend
         run: |
-          python -m unittest discover -s Backend/tests -p "test_*.py" -v
+          python train_model.py
 
-      - name: Validate Alembic Migration Heads
+      - name: Run Full Backend Automated Test Suite
+        working-directory: Backend
         run: |
-          cd Backend
-          python -m alembic check || python -m alembic heads
+          python -m unittest discover -s tests -p "test_*.py" -v
+
+      - name: Validate Alembic Database Migrations
+        working-directory: Backend
+        run: |
+          python -m alembic upgrade head
 
   frontend-ci:
     name: Frontend Lint & Production Build

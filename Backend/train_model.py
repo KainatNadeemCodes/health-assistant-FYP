@@ -257,11 +257,11 @@ def save_artefacts(
 
     log.info("Saving model...")
     with open(model_path, "wb") as f:
-        pickle.dump(classifier, f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(classifier, f, protocol=4)
 
     log.info("Saving vectorizer...")
     with open(vec_path, "wb") as f:
-        pickle.dump(vectorizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(vectorizer, f, protocol=4)
 
 
 # ===========================================================================

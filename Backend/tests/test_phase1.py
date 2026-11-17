@@ -22,6 +22,7 @@ from src.security import (
     verify_password,
     create_access_token,
     decode_access_token,
+    ADMIN_SECRET,
 )
 from src.database import init_db, close_engine
 
@@ -155,7 +156,7 @@ class TestPhase1SecurityAndAPI(unittest.TestCase):
         self.assertEqual(res_unauth.status_code, 403)
 
         # Admin login
-        res_admin_login = self.client.post("/admin/login", json={"password": "testadminsecret2025"})
+        res_admin_login = self.client.post("/admin/login", json={"password": ADMIN_SECRET})
         self.assertEqual(res_admin_login.status_code, 200)
         admin_token = res_admin_login.json()["access_token"]
 
