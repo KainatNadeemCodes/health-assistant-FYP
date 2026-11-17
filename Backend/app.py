@@ -51,6 +51,7 @@ from src.feature_extraction import load_vectorizer, transform_text
 from src.classifier         import load_model, predict_top_k
 from src.triage             import generate_triage, generate_personalized_guidance
 from src.explainability     import get_top_features
+from src.clinical_guardrails import evaluate_prediction_confidence
 from src.database import (
     init_db,
     save_consultation,
@@ -343,6 +344,28 @@ async def predict(
     predictions = predict_top_k(model, X, k=3)
     # predictions is a list of tuples: [(condition_name, confidence_score), ...]
 
+    # Step 3b: Clinical Safety Guardrail — Check OOV & Confidence Quality
+    is_oov, is_low_conf, guard_message = evaluate_prediction_confidence(X, predictions)
+    if is_oov:
+        return {
+            "error": "unrecognized_symptoms",
+            "message": guard_message,
+            "summary": guard_message,
+            "conditions": [],
+            "triage_level": "visit-gp",
+            "triage_explanation": "Your description did not match recognized clinical patterns in our medical database.",
+            "recommended_specialist": "General Physician",
+            "self_care_tips": [
+                "Track symptom frequency, onset, and triggers.",
+                "Stay well hydrated and get adequate rest.",
+                "Seek medical attention if your condition worsens.",
+            ],
+            "key_symptoms": [],
+            "profile_notes": ["Clinical Note: Non-specific or unrecognized symptom presentation."],
+            "red_flag_warnings": [],
+            "disclaimer": "This assistant is not a substitute for professional medical advice.",
+        }
+
     top_condition  = predictions[0][0]  # Index 0 is the condition name
     top_confidence = predictions[0][1]  # Index 1 is the probability
 
@@ -403,6 +426,10 @@ async def predict(
         for name, score in predictions
     ]
 
+    profile_notes = list(personalized.get("profile_notes", []))
+    if is_low_conf:
+        profile_notes.append("Clinical Warning: Non-specific symptom presentation. An in-person consultation is advised.")
+
     return {
         "query_id":               str(query_id),
         "conditions":             formatted_conditions,
@@ -411,11 +438,12 @@ async def predict(
         "recommended_specialist": personalized.get("specialist", base_triage["specialist"]),
         "self_care_tips":         personalized.get("tips", []),
         "key_symptoms":           key_symptoms,
-        "profile_notes":          personalized.get("profile_notes", []),
+        "profile_notes":          profile_notes,
         "red_flag_warnings":      personalized.get("red_flags", []),
         "summary":                (
             f"Based on your symptoms, the most likely match is {top_condition} "
             f"with {top_confidence * 100:.0f}% confidence."
+            + (" (Note: Ambiguous presentation — clinical evaluation strongly recommended.)" if is_low_conf else "")
         ),
         "disclaimer": disclaimer,
     }

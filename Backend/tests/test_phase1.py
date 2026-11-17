@@ -29,6 +29,12 @@ from src.database import init_db
 class TestPhase1SecurityAndAPI(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        test_db = os.environ.get("DATABASE_PATH")
+        if test_db and os.path.exists(test_db):
+            try:
+                os.remove(test_db)
+            except OSError:
+                pass
         # Initialize fresh test db
         init_db()
         cls.client = TestClient(app)

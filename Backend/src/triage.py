@@ -23,6 +23,7 @@ SRS: FR3, FR4, UC-01, UC-03
 """
 
 import logging
+from src.clinical_guardrails import filter_affirmed_keywords
 
 log = logging.getLogger(__name__)
 
@@ -274,15 +275,16 @@ def generate_triage(
     symptoms_lower = symptoms_cleaned.lower()
     specialist     = SPECIALIST_MAP.get(disease, "General Physician")
 
-    # ── Layer 1: Red flags always win ──────────────────────────────────────
-    for flag in _RED_FLAG_KEYWORDS:
-        if flag in symptoms_lower:
-            log.info(f"Red flag keyword '{flag}' detected → Urgent Care")
-            return {
-                "triage_level": "High",
-                "specialist":   specialist,
-                "action":       _TRIAGE_ACTIONS["High"],
-            }
+    # ── Layer 1: Red flags always win (affirmed & unnegated only) ─────────
+    affirmed_flags = filter_affirmed_keywords(_RED_FLAG_KEYWORDS, symptoms_cleaned)
+    if affirmed_flags:
+        detected_flag = affirmed_flags[0]
+        log.info(f"Affirmed red flag keyword '{detected_flag}' detected → Urgent Care")
+        return {
+            "triage_level": "High",
+            "specialist":   specialist,
+            "action":       _TRIAGE_ACTIONS["High"],
+        }
 
     # ── Layer 2: Disease clinical baseline ─────────────────────────────────
     baseline = _DISEASE_BASELINE.get(disease, None)
@@ -299,16 +301,17 @@ def generate_triage(
     else:
         log.info(f"Disease '{disease}' has clinical baseline → {baseline}")
 
-    # ── Layer 3: Escalation check ──────────────────────────────────────────
-    escalation_triggered = any(kw in symptoms_lower for kw in _ESCALATION_KEYWORDS)
+    # ── Layer 3: Escalation check (affirmed & unnegated only) ─────────────
+    affirmed_escalations = filter_affirmed_keywords(_ESCALATION_KEYWORDS, symptoms_cleaned)
+    escalation_triggered = len(affirmed_escalations) > 0
 
     if escalation_triggered:
         if baseline == "Low":
             baseline = "Medium"
-            log.info("Escalation keywords found: Low → Medium")
+            log.info("Affirmed escalation keywords found: Low → Medium")
         elif baseline == "Medium":
             baseline = "High"
-            log.info("Escalation keywords found: Medium → High")
+            log.info("Affirmed escalation keywords found: Medium → High")
         # Already High — stays High
 
     # ── Layer 4: De-escalation check (conservative) ────────────────────────
@@ -317,7 +320,8 @@ def generate_triage(
     _ABSOLUTE_HIGH = {"Heart Attack", "Stroke", "Meningitis", "Appendicitis", "Tuberculosis", "Malaria"}
 
     if baseline == "High" and disease not in _ABSOLUTE_HIGH:
-        de_escalation_triggered = any(kw in symptoms_lower for kw in _DE_ESCALATION_KEYWORDS)
+        affirmed_de_escalations = filter_affirmed_keywords(_DE_ESCALATION_KEYWORDS, symptoms_cleaned)
+        de_escalation_triggered = len(affirmed_de_escalations) > 0
         # Only de-escalate if NO escalation keyword was also present
         if de_escalation_triggered and not escalation_triggered:
             baseline = "Medium"
