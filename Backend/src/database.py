@@ -86,6 +86,16 @@ def resolve_database_url(custom_target: Optional[str] = None) -> str:
         # Standard cloud compatibility: rewrite legacy postgres:// to postgresql://
         if target.startswith("postgres://"):
             target = target.replace("postgres://", "postgresql://", 1)
+        # Automatic driver resolution: fallback to psycopg2 if psycopg (v3) is not installed
+        if target.startswith("postgresql://"):
+            try:
+                import psycopg  # noqa: F401
+            except ImportError:
+                try:
+                    import psycopg2  # noqa: F401
+                    target = target.replace("postgresql://", "postgresql+psycopg2://", 1)
+                except ImportError:
+                    pass
         if "://" in target:
             return target
         # If it's a file path provided in target
