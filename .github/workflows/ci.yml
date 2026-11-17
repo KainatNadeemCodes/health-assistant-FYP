@@ -40,7 +40,15 @@ jobs:
       - name: Test Phase 1 - Security, Auth & IDOR Protection
         working-directory: Backend
         run: |
-          python -m unittest tests/test_phase1.py -v
+          python -m unittest tests/test_phase1.py -v > phase1.log 2>&1 || (cat phase1.log && exit 1)
+          cat phase1.log
+
+      - name: Upload Phase 1 Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-test-log
+          path: Backend/phase1.log
 
       - name: Test Phase 2 - Clinical Dataset & Predictions
         working-directory: Backend
