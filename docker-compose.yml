@@ -6,8 +6,6 @@
 #   3. frontend  → React + Vite + Tailwind bundle served via Nginx
 # ============================================================
 
-version: "3.8"
-
 services:
   postgres:
     image: postgres:16-alpine
