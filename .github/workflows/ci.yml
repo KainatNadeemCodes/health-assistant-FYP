@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   backend-ci:
     name: Backend Test Suite & Health Check
@@ -69,6 +72,17 @@ jobs:
         working-directory: Backend
         run: |
           python -m alembic upgrade head
+
+      - name: Push failure log to ci-log branch
+        if: failure()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B ci-log
+          cp Backend/*.log ./ 2>/dev/null || true
+          git add -A
+          git commit -m "ci: capture failure logs [skip ci]" || exit 0
+          git push -f origin ci-log
 
   frontend-ci:
     name: Frontend Lint & Production Build
