@@ -757,4 +757,4 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 7860))
     host = os.getenv("HOST", "0.0.0.0")
     log.info(f"🚀 Starting Health Assistant API on {host}:{port}")
-    uvicorn.run("app:app", host=host, port=port, reload=False)
+    uvicorn.run(app, host=host, port=port)
