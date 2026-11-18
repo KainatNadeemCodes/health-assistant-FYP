@@ -734,3 +734,14 @@ async def admin_update_role(
     except Exception as e:
         log.error(f"Role update error: {e}")
         raise HTTPException(status_code=500, detail="Role update failed.")
+
+
+# ===========================================================================
+# SERVER RUNNER (Supports Hugging Face Spaces Port 7860 & Standard Cloud Runtimes)
+# ===========================================================================
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 7860))
+    host = os.getenv("HOST", "0.0.0.0")
+    log.info(f"🚀 Starting Health Assistant API on {host}:{port}")
+    uvicorn.run("app:app", host=host, port=port, reload=False)
