@@ -59,7 +59,7 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "http://localhost:8000"
+        VITE_API_URL: ""
     container_name: health_assistant_frontend
     restart: unless-stopped
     depends_on:

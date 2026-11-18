@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Input }  from "@/components/ui/input";
 import { toast }  from "sonner";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "";
 
 const TRIAGE_COLORS: Record<string, string> = {
   Low:    "#10b981",

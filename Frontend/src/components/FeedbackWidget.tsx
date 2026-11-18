@@ -16,7 +16,7 @@ import { Star, Send, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 interface FeedbackWidgetProps {
   consultId: number | string;

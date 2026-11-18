@@ -52,7 +52,7 @@ type Message = {
 type VoiceState = "idle" | "recording" | "transcribing";
 
 const GUEST_MESSAGE_LIMIT = 5;
-const API_BASE            = "http://localhost:8000";
+const API_BASE = import.meta.env.VITE_API_URL || "";
 
 // ─── Triage config ──────────────────────────────────────────────────────────
 
