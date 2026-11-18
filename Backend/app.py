@@ -90,19 +90,18 @@ except Exception:
     pass
 
 
-@asynccontextmanager
-async def lifespan(fastapi_app: FastAPI):
-    # Initialize database tables
+# ── Database Initialization ───────────────────────────────────────────────────
+# Synchronous initialization guarantees compatibility across ASGI (Uvicorn) and WSGI (uWSGI / a2wsgi)
+try:
     init_db()
     log.info("✅  Database initialized and ready.")
-    yield
-
+except Exception as e:
+    log.error(f"Database initialization note: {e}")
 
 app = FastAPI(
     title="AI-Powered Smart Health Assistant",
     version="2.0",
     description="Backend API for the FYP Health Assistant — Group F25PROJECT664B0",
-    lifespan=lifespan,
 )
 
 
@@ -190,7 +189,7 @@ class PdfRequest(BaseModel):
 
 
 @app.get("/")
-async def root():
+def root():
     return {"message": "Health Assistant API v2.0 is running. Group: F25PROJECT664B0"}
 
 
