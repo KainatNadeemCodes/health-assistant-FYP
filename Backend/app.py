@@ -42,6 +42,7 @@ if not shutil.which("ffmpeg"):
     print("Voice-to-text audio conversion may be unavailable unless ffmpeg is installed.")
 # -----------------------------------
 
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Response, File, UploadFile, Depends, Security
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -77,10 +78,20 @@ from src.security import (
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(fastapi_app: FastAPI):
+    # Initialize database tables
+    init_db()
+    log.info("✅  Database initialized and ready.")
+    yield
+
+
 app = FastAPI(
     title="AI-Powered Smart Health Assistant",
     version="2.0",
     description="Backend API for the FYP Health Assistant — Group F25PROJECT664B0",
+    lifespan=lifespan,
 )
 
 
@@ -165,18 +176,6 @@ class PdfRequest(BaseModel):
     recommended_specialist: Optional[str] = "General Physician"
     key_symptoms:           Optional[List[str]] = []
     summary:                Optional[str] = ""
-
-
-# ===========================================================================
-# STARTUP
-# ===========================================================================
-
-@app.on_event("startup")
-async def startup():
-    # Make sure the DB tables exist before any request hits.
-    # This is safe to call multiple times — uses IF NOT EXISTS internally.
-    init_db()
-    log.info("✅  Database initialized and ready.")
 
 
 @app.get("/")
@@ -739,6 +738,20 @@ async def admin_update_role(
 # ===========================================================================
 # SERVER RUNNER (Supports Hugging Face Spaces Port 7860 & Standard Cloud Runtimes)
 # ===========================================================================
+try:
+    import gradio as gr
+
+    with gr.Blocks(title="AI Health Assistant API") as hf_demo:
+        gr.Markdown("# 🏥 AI-Powered Smart Health Assistant API")
+        gr.Markdown(
+            "Backend API is active and serving endpoints: `/predict`, `/auth`, `/docs`.\n\n"
+            "Open [`/docs`](/docs) for the interactive Swagger API documentation."
+        )
+
+    app = gr.mount_gradio_app(app, hf_demo, path="/gradio")
+except Exception as e:
+    log.debug(f"Gradio mounting note: {e}")
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 7860))
