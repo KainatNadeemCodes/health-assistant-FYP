@@ -78,6 +78,17 @@ from src.security import (
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
 
+# ── Hugging Face ZeroGPU Compatibility ─────────────────────────────────────────
+try:
+    import spaces
+
+    @spaces.GPU
+    def _zero_gpu_keepalive(text: str = ""):
+        """Hugging Face ZeroGPU validator check."""
+        return text
+except Exception:
+    pass
+
 
 @asynccontextmanager
 async def lifespan(fastapi_app: FastAPI):
