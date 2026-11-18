@@ -61,6 +61,22 @@ except ImportError:
 # ── Logging ───────────────────────────────────────────────────────────────────
 log = logging.getLogger(__name__)
 
+# ── Load Environment Variables (Neon .env.local and .env support) ─────────────
+try:
+    from dotenv import load_dotenv
+    _backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _root_dir = os.path.dirname(_backend_dir)
+    for _env_file in [
+        os.path.join(_root_dir, ".env.local"),
+        os.path.join(_root_dir, ".env"),
+        os.path.join(_backend_dir, ".env.local"),
+        os.path.join(_backend_dir, ".env"),
+    ]:
+        if os.path.exists(_env_file):
+            load_dotenv(_env_file, override=False)
+except ImportError:
+    pass
+
 # ── Config & URL Resolution ───────────────────────────────────────────────────
 DEFAULT_DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "health_assistant.db")
 

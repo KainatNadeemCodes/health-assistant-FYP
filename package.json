@@ -1,4 +1,10 @@
 {
+  "name": "health-assistant-fyp",
+  "version": "2.0.0",
+  "scripts": {
+    "build": "npm --prefix Frontend run build",
+    "build:frontend": "npm --prefix Frontend run build"
+  },
   "dependencies": {
     "@neon/config": "^1.14.3",
     "@neon/env": "^2.1.6"

@@ -19,7 +19,12 @@ from src.database import Base, resolve_database_url
 config = context.config
 
 # Dynamically set DB URL from environment or fallback
-target_db_url = resolve_database_url()
+# Neon Best Practice: Prefer DATABASE_URL_UNPOOLED for schema migrations (direct DDL transactional session)
+unpooled_url = os.getenv("DATABASE_URL_UNPOOLED")
+if unpooled_url:
+    target_db_url = resolve_database_url(unpooled_url)
+else:
+    target_db_url = resolve_database_url()
 config.set_main_option("sqlalchemy.url", target_db_url)
 
 # Interpret the config file for Python logging.

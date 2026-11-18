@@ -16,6 +16,7 @@ sqlalchemy>=2.0.0
 alembic>=1.13.0
 psycopg[binary]>=3.1.18
 psycopg2-binary>=2.9.9
+python-dotenv>=1.0.0
 
 # Required for file uploads — used by the /voice-input endpoint
 python-multipart>=0.0.9
