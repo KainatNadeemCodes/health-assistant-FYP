@@ -747,22 +747,8 @@ async def admin_update_role(
 
 
 # ===========================================================================
-# SERVER RUNNER (Supports Hugging Face Spaces Port 7860 & Standard Cloud Runtimes)
+# SERVER RUNNER (Supports Hugging Face Spaces Port 7860 & Cloud Runtimes)
 # ===========================================================================
-try:
-    import gradio as gr
-
-    with gr.Blocks(title="AI Health Assistant API") as hf_demo:
-        gr.Markdown("# 🏥 AI-Powered Smart Health Assistant API")
-        gr.Markdown(
-            "Backend API is active and serving endpoints: `/predict`, `/auth`, `/docs`.\n\n"
-            "Open [`/docs`](/docs) for the interactive Swagger API documentation."
-        )
-
-    app = gr.mount_gradio_app(app, hf_demo, path="/gradio")
-except Exception as e:
-    log.debug(f"Gradio mounting note: {e}")
-
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 7860))
